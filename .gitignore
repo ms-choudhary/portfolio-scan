@@ -13,4 +13,4 @@ ui/dist-ssr
 
 .envrc
 ./portfolio-scan
-./portfolio
+.portfolio
