@@ -11,6 +11,6 @@ export default defineConfig({
     },
   },
   server: {
-    allowedHosts: ['ixdev.local'], // Add your hostname here
+    allowedHosts: ['ixdev.local', 'ixdev.taildace6.ts.net'], // Add your hostname here
   },
 })
