@@ -1,8 +1,8 @@
 # portfolio-scan
 
-Tracks your current mutual fund portfolio for different asset classes. And helps you rebalance if the portfolio gets skewed from the required allocation.
+Tracks your current mutual fund portfolio allocation for different asset classes. And helps you rebalance if the portfolio gets skewed from the required allocation.
 
-![screenshot.png](:/docs/screenshot.png)
+![docs/screenshot.png](docs/screenshot.png)
 
 On every reload it fetches the current NAV of all funds from AMFI site. 
 
