@@ -1,0 +1,32 @@
+{
+  "funds": [
+    {
+      "class": "equity",
+      "name": "MIRAE ASSET ELSS TAX SAVER FUND - DIRECT PLAN",
+      "symbol": "INF769K01DM9",
+      "quantity": 10.56,
+      "price": 0
+    },
+    {
+      "class": "equity",
+      "name": "UTI NIFTY 50 INDEX FUND - DIRECT PLAN",
+      "symbol": "INF789F01XA0",
+      "quantity": 10.56,
+      "price": 0
+    },
+    {
+      "class": "gold",
+      "name": "UTI GOLD ETF FUND OF FUND - DIRECT PLAN",
+      "symbol": "INF789F1AWB9",
+      "quantity": 10.56,
+      "price": 0
+    },
+    {
+      "class": "debt",
+      "name": "AXIS LIQUID FUND - DIRECT PLAN",
+      "symbol": "INF846K01CX4",
+      "quantity": 10.56,
+      "price": 0
+    }
+  ]
+}
