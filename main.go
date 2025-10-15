@@ -67,9 +67,9 @@ func fetchFunds(account, apikey, apisecret string) ([]Fund, error) {
 	for _, h := range holdings {
 		if account == Equity {
 			funds = append(funds, Fund{Class: Equity, Name: h.Fund, Quantity: h.Quantity, Symbol: h.Tradingsymbol})
-		} else if account == Debt && strings.HasPrefix(h.Fund, "AXIS LIQUID FUND") {
+		} else if account == Debt && strings.Contains(h.Fund, "LIQUID FUND") {
 			funds = append(funds, Fund{Class: Debt, Name: h.Fund, Quantity: h.Quantity, Symbol: h.Tradingsymbol})
-		} else if account == Debt && strings.HasPrefix(h.Fund, "UTI GOLD ETF FUND") {
+		} else if account == Debt && strings.Contains(h.Fund, "GOLD ETF FUND") {
 			funds = append(funds, Fund{Class: Gold, Name: h.Fund, Quantity: h.Quantity, Symbol: h.Tradingsymbol})
 		}
 	}
