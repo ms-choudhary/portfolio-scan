@@ -2,6 +2,7 @@
 import { ref, computed, watch, onMounted } from 'vue'
 import { Textarea } from "@/components/ui/textarea"
 import { DonutChart } from "@/components/ui/chart-donut"
+import { Input } from "@/components/ui/input"
 import {
   Table,
   TableBody,
@@ -16,6 +17,11 @@ const cashAmount = ref('')
 const input = ref<Array<{name: string, amount: number}>>([])
 const loading = ref(true)
 const error = ref('')
+
+// Target allocation percentages
+const equityTarget = ref(75)
+const debtTarget = ref(20)
+const goldTarget = ref(5)
 
 // Fetch portfolio data from API
 const fetchPortfolio = async () => {
@@ -37,7 +43,47 @@ const fetchPortfolio = async () => {
 }
 
 onMounted(() => {
+  const savedCash = localStorage.getItem('portfolioCashAmount')
+  if (savedCash) {
+    cashAmount.value = savedCash
+  }
+  
+  const savedEquity = localStorage.getItem('equityTarget')
+  if (savedEquity) {
+    equityTarget.value = parseFloat(savedEquity)
+  }
+  
+  const savedDebt = localStorage.getItem('debtTarget')
+  if (savedDebt) {
+    debtTarget.value = parseFloat(savedDebt)
+  }
+  
+  const savedGold = localStorage.getItem('goldTarget')
+  if (savedGold) {
+    goldTarget.value = parseFloat(savedGold)
+  }
+  
   fetchPortfolio()
+})
+
+watch(cashAmount, (newValue) => {
+  localStorage.setItem('portfolioCashAmount', newValue)
+})
+
+watch(equityTarget, (newValue) => {
+  localStorage.setItem('equityTarget', newValue.toString())
+})
+
+watch(debtTarget, (newValue) => {
+  localStorage.setItem('debtTarget', newValue.toString())
+})
+
+watch(goldTarget, (newValue) => {
+  localStorage.setItem('goldTarget', newValue.toString())
+})
+
+const totalTargetPercent = computed(() => {
+  return equityTarget.value + debtTarget.value + goldTarget.value
 })
 
 const totalAmount = computed(() => {
@@ -56,26 +102,26 @@ const holdings = computed(() => {
     if (item.name == "equity") {
       result.push({
           name: "equity", 
-          label: "EQUITY - 75%", 
+          label: `EQUITY - ${equityTarget.value}%`, 
           currentAmount: item.amount, 
           percent: (item.amount / totalAmount.value) * 100,
-          rebalanceAmount: (totalAmount.value * 0.75) - item.amount
+          rebalanceAmount: (totalAmount.value * equityTarget.value / 100) - item.amount
       })
     } else if (item.name == "debt") {
       result.push({
           name: "debt", 
-          label: "DEBT - 20%", 
+          label: `DEBT - ${debtTarget.value}%`, 
           currentAmount: item.amount, 
           percent: (item.amount / totalAmount.value) * 100,
-          rebalanceAmount: (totalAmount.value * 0.20) - item.amount
+          rebalanceAmount: (totalAmount.value * debtTarget.value / 100) - item.amount
       })
     } else if (item.name == "gold") {
       result.push({
           name: "gold",
-          label: "GOLD - 5%",
+          label: `GOLD - ${goldTarget.value}%`,
           currentAmount: item.amount, 
           percent: (item.amount / totalAmount.value) * 100,
-          rebalanceAmount: (totalAmount.value * 0.05) - item.amount
+          rebalanceAmount: (totalAmount.value * goldTarget.value / 100) - item.amount
       })
     }
   }
@@ -117,13 +163,63 @@ const formatCurrency = (amount: number) => {
 	</div>
   
   <div class="block ml-auto mr-auto mb-8 mt-8 max-w-md">
+	 	 <h2 class="text-xl font-semibold text-center mb-4">Cash Amount</h2>
      <Textarea 
        v-model="cashAmount" 
        placeholder="Enter cash amount" 
        type="number"
      />
   </div>
-  
+
+  <div class="block ml-auto mr-auto mb-8 mt-8 max-w-md p-6 border rounded-lg">
+    <h2 class="text-xl font-semibold text-center mb-4">Target Allocation</h2>
+    
+    <div class="grid grid-cols-3 gap-4 mb-4">
+      <div>
+        <Label for="equity" class="text-sm">Equity %</Label>
+        <Input 
+          id="equity"
+          v-model.number="equityTarget" 
+          type="number"
+          min="0"
+          max="100"
+          step="1"
+          class="mt-1"
+        />
+      </div>
+      <div>
+        <Label for="debt" class="text-sm">Debt %</Label>
+        <Input 
+          id="debt"
+          v-model.number="debtTarget" 
+          type="number"
+          min="0"
+          max="100"
+          step="1"
+          class="mt-1"
+        />
+      </div>
+      <div>
+        <Label for="gold" class="text-sm">Gold %</Label>
+        <Input 
+          id="gold"
+          v-model.number="goldTarget" 
+          type="number"
+          min="0"
+          max="100"
+          step="1"
+          class="mt-1"
+        />
+      </div>
+    </div>
+    
+    <div class="text-center font-semibold" :class="totalTargetPercent !== 100 ? 'text-red-600' : 'text-green-600'">
+      Total: {{ totalTargetPercent }}% 
+      <span v-if="totalTargetPercent !== 100">(should equal 100%)</span>
+      <span v-else>✓</span>
+    </div>
+  </div>
+
   <div class="max-w-2xl mx-auto">
   	<Table>
   	  <TableCaption>Current Holdings.</TableCaption>
