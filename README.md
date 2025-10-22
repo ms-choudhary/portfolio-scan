@@ -3,7 +3,7 @@
 Tracks your current mutual fund portfolio in different asset classes. 
 And helps you rebalance if the portfolio gets skewed overtime from the desired % allocation. For eg, 75% in equity, 20% in debt & 5% in gold. 
 
-![docs/screenshot.png](docs/screenshot.png)
+<img src="docs/screenshot.png" alt="screenshot.png" width="274" height="644">
 
 On every reload it fetches the current NAV of all funds from AMFI site. 
 
