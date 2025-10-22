@@ -38,7 +38,7 @@ export DEBT_KITE_API_KEY=<dummy>
 export DEBT_KITE_API_SECRET=<dummy>
 ```
 
-### Limitation
+### Limitations
 
 - Each app can only fetch funds from single zerodha account, if you've separate accounts for funds, you need to create different apps for each of them. For eg, I keep my equity and debt in to separate accounts. 
 - Even though zerodha tracks the current price of holdings, it lags behind what's available at AMFI. 
