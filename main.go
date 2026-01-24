@@ -110,7 +110,7 @@ func (p *Portfolio) updateCurrentPrice() error {
 	for i, f := range p.Funds {
 		nav, err := parseNAV(lines, f.Symbol)
 		if err != nil {
-			return fmt.Errorf("err: %v", err)
+			return fmt.Errorf("err, failed to fetch value: %v for %s", err, f.Name)
 		}
 
 		p.Funds[i].Price = nav
