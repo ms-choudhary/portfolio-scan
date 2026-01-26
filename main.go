@@ -41,15 +41,8 @@ type Allocation struct {
 //go:embed ui/dist/*
 var frontendFS embed.FS
 
-func fetchFunds(account, apikey, apisecret string) ([]Fund, error) {
+func fetchFunds(account, apikey, requestToken, apisecret string) ([]Fund, error) {
 	kc := kiteconnect.New(apikey)
-
-	fmt.Printf("Login to %s account and paste the requestToken:\n", account)
-	fmt.Println(kc.GetLoginURL())
-	fmt.Printf("requestToken: ")
-
-	var requestToken string
-	fmt.Scanf("%s\n", &requestToken)
 
 	data, err := kc.GenerateSession(requestToken, apisecret)
 	if err != nil {
@@ -125,7 +118,28 @@ func handleHTTPError(w http.ResponseWriter, err error) {
 	return
 }
 
-func (p *Portfolio) Handler(w http.ResponseWriter, req *http.Request) {
+func loadFunds(fileName string) ([]Fund, error) {
+	var p Portfolio
+	data, err := os.ReadFile(fileName)
+	if err != nil {
+		return []Fund{}, err
+	}
+	if err := json.Unmarshal(data, &p); err != nil {
+		return []Fund{}, err
+	}
+
+	return p.Funds, nil
+}
+
+func handlePortfolio(w http.ResponseWriter, req *http.Request) {
+	p := Portfolio{Funds: []Fund{}}
+
+	funds, _ := loadFunds(".debt_portfolio")
+	p.Funds = append(p.Funds, funds...)
+
+	funds, _ = loadFunds(".equity_portfolio")
+	p.Funds = append(p.Funds, funds...)
+
 	if err := p.updateCurrentPrice(); err != nil {
 		handleHTTPError(w, err)
 		return
@@ -159,62 +173,79 @@ func (p *Portfolio) Handler(w http.ResponseWriter, req *http.Request) {
 	log.Printf("200 ok: %v", string(data))
 }
 
-func fetchPortfolio(eqAPIKey, eqAPISecret, debtAPIKey, debtAPISecret string) (*Portfolio, error) {
-	if eqAPIKey == "" || eqAPISecret == "" {
-		return &Portfolio{}, fmt.Errorf("please set EQ_KITE_API_KEY and EQ_KITE_API_SECRET")
+func getEnvOrFail(envvar string) string {
+	val := os.Getenv(envvar)
+	if val == "" {
+		log.Fatalf("env %s not found", envvar)
 	}
 
-	if debtAPIKey == "" || debtAPISecret == "" {
-		return &Portfolio{}, fmt.Errorf("please set DEBT_KITE_API_KEY and DEBT_KITE_API_SECRET")
+	return val
+}
+
+func handleLogin(w http.ResponseWriter, req *http.Request) {
+	if strings.Contains(req.URL.Path, "debt") {
+		kc := kiteconnect.New(getEnvOrFail("DEBT_KITE_API_KEY"))
+		http.Redirect(w, req, kc.GetLoginURL(), http.StatusMovedPermanently)
+		return
+	} else if strings.Contains(req.URL.Path, "equity") {
+		kc := kiteconnect.New(getEnvOrFail("EQ_KITE_API_KEY"))
+		http.Redirect(w, req, kc.GetLoginURL(), http.StatusMovedPermanently)
+		return
 	}
 
-	p := Portfolio{Funds: []Fund{}}
-	funds, err := fetchFunds(Equity, eqAPIKey, eqAPISecret)
+	fmt.Fprintf(w, "<html><h1>Error: invalid path, expected (/login/debt or /login/equity)</h1></html>")
+}
+
+func savePortfolio(account, requestToken string) error {
+	var funds []Fund
+	var err error
+	if account == Equity {
+		funds, err = fetchFunds(Equity, getEnvOrFail("EQ_KITE_API_KEY"), requestToken, getEnvOrFail("EQ_KITE_API_SECRET"))
+		if err != nil {
+			return err
+		}
+	} else if account == Debt {
+		funds, err = fetchFunds(Debt, getEnvOrFail("DEBT_KITE_API_KEY"), requestToken, getEnvOrFail("DEBT_KITE_API_SECRET"))
+		if err != nil {
+			return err
+		}
+	} else {
+		return fmt.Errorf("invalid account: %s", account)
+	}
+
+	data, err := json.Marshal(&Portfolio{Funds: funds})
 	if err != nil {
-		return &Portfolio{}, fmt.Errorf("could not login equity account: %v", err)
+		return err
 	}
 
-	p.Funds = append(p.Funds, funds...)
+	fileName := fmt.Sprintf(".%s_portfolio", strings.ToLower(account))
+	return os.WriteFile(fileName, data, 0644)
+}
 
-	funds, err = fetchFunds(Debt, debtAPIKey, debtAPISecret)
-	if err != nil {
-		return &Portfolio{}, fmt.Errorf("could not login debt account: %v", err)
+func handleAuthRedirect(w http.ResponseWriter, req *http.Request) {
+	if strings.Contains(req.URL.Path, "debt") {
+		if err := savePortfolio(Debt, req.URL.Query().Get("request_token")); err != nil {
+			log.Printf("err: %v", err)
+			fmt.Fprintf(w, "<html><h1>%s</h1></html>", err.Error())
+			return
+		}
+	} else if strings.Contains(req.URL.Path, "equity") {
+		if err := savePortfolio(Equity, req.URL.Query().Get("request_token")); err != nil {
+			log.Printf("err: %v", err)
+			fmt.Fprintf(w, "<html><h1>%s</h1></html>", err.Error())
+			return
+		}
+	} else {
+		fmt.Fprintf(w, "<html><h1>Error: invalid auth redirect url, %s expected (/auth/debt or /auth/equity)</h1></html>", req.URL.Path)
+		return
 	}
 
-	p.Funds = append(p.Funds, funds...)
-	return &p, nil
+	w.Header().Set("Content-Type", "text/html")
+	fmt.Fprintf(w, "<html><h1>Success!</h1></html>")
+	log.Print("logged in successfully")
 }
 
 func main() {
-	var portfolio *Portfolio
-	data, err := os.ReadFile(".portfolio")
-	if os.IsNotExist(err) {
-		portfolio, err = fetchPortfolio(os.Getenv("EQ_KITE_API_KEY"), os.Getenv("EQ_KITE_API_SECRET"), os.Getenv("DEBT_KITE_API_KEY"), os.Getenv("DEBT_KITE_API_SECRET"))
-		if err != nil {
-			log.Fatal(err)
-		}
-
-		data, err = json.Marshal(*portfolio)
-		if err != nil {
-			log.Fatalf("error marshalling portfolio: %v", err)
-		}
-
-		if err := os.WriteFile(".portfolio", data, 0644); err != nil {
-			log.Fatalf("error writing portfolio: %v", err)
-		}
-	} else if err != nil {
-		log.Fatalf("error reading portfolio: %v", err)
-	} else {
-		var p Portfolio
-		if err := json.Unmarshal(data, &p); err != nil {
-			log.Fatalf("failed to unmarhsal portfolio: %v", err)
-		}
-
-		portfolio = &p
-
-		log.Printf("loaded portfolio")
-	}
-
 	distFS, err := fs.Sub(frontendFS, "ui/dist")
 	if err != nil {
 		log.Fatal(err)
@@ -222,10 +253,15 @@ func main() {
 
 	frontendHandler := http.FileServer(http.FS(distFS))
 
-	http.HandleFunc("/api/portfolio", portfolio.Handler)
+	http.HandleFunc("/api/portfolio", handlePortfolio)
+	http.HandleFunc("/login/", handleLogin)
+	http.HandleFunc("/auth/", handleAuthRedirect)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if r.URL.Path == "/api/portfolio" {
+			return
+		}
+		if strings.HasPrefix(r.URL.Path, "/login") || strings.HasPrefix(r.URL.Path, "/return") {
 			return
 		}
 		frontendHandler.ServeHTTP(w, r)

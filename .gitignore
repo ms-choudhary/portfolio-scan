@@ -12,5 +12,7 @@ ui/dist
 ui/dist-ssr
 
 .envrc
-./portfolio-scan
+portfolio-scan
+.equity_portfolio
+.debt_portfolio
 .portfolio

@@ -1,14 +1,23 @@
-FROM alpine:3.14
+#########
+FROM golang:1.24.0 AS builder
 
 WORKDIR /app
 
-RUN apk add --no-cache ca-certificates openssl wget && \
-    wget http://crt.sectigo.com/SectigoPublicServerAuthenticationCADVR36.crt && \
-    openssl x509 -inform DER -in SectigoPublicServerAuthenticationCADVR36.crt -out /usr/local/share/ca-certificates/sectigo.crt && \
-    rm SectigoPublicServerAuthenticationCADVR36.crt && \
-    update-ca-certificates
+COPY go.mod go.sum ./
+RUN go mod download 
 
-COPY portfolio-scan /app/portfolio-scan
+COPY . .
+
+RUN CGO_ENABLED=0 GOOS=linux go build -o ./portfolio-scan .
+
+#########
+FROM gcr.io/distroless/static-debian12
+
+WORKDIR /app
+
+COPY --from=builder /app/portfolio-scan /usr/local/bin/portfolio-scan
 COPY ui/dist /app/ui/dist
 
-CMD ["/app/portfolio-scan"]
+EXPOSE 9876
+
+CMD ["portfolio-scan"]
