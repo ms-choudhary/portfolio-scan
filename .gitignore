@@ -13,6 +13,4 @@ ui/dist-ssr
 
 .envrc
 portfolio-scan
-.equity_portfolio
-.debt_portfolio
-.portfolio
+.portfolio*

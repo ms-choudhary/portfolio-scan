@@ -11,6 +11,7 @@ import (
 	"os"
 	"strconv"
 	"strings"
+	"time"
 
 	kiteconnect "github.com/zerodha/gokiteconnect/v4"
 )
@@ -25,6 +26,7 @@ type Fund struct {
 	Class    string  `json:"class"`
 	Name     string  `json:"name"`
 	Symbol   string  `json:"symbol"`
+	Month    string  `json:"month,omitempty"`
 	Quantity float64 `json:"quantity"`
 	Price    float64 `json:"price"`
 }
@@ -86,6 +88,23 @@ func parseNAV(lines []string, sym string) (float64, error) {
 	return 0, fmt.Errorf("fund not found")
 }
 
+func monthsElapsed(since string) (int, error) {
+	currentMonth := int(time.Now().Month())
+	currentYear := int(time.Now().Year())
+
+	sinceMonth, err := strconv.Atoi(strings.Split(since, "/")[0])
+	if err != nil {
+		return 0, err
+	}
+
+	sinceYear, err := strconv.Atoi(strings.Split(since, "/")[1])
+	if err != nil {
+		return 0, err
+	}
+
+	return ((currentYear-sinceYear)*12 + currentMonth) - sinceMonth, nil
+}
+
 func (p *Portfolio) updateCurrentPrice() error {
 	resp, err := http.Get("https://portal.amfiindia.com/spages/NAVAll.txt")
 	if err != nil {
@@ -101,6 +120,18 @@ func (p *Portfolio) updateCurrentPrice() error {
 	lines := strings.Split(string(body), "\n")
 
 	for i, f := range p.Funds {
+		if f.Symbol == "NA" {
+			if strings.HasSuffix(f.Name, "monthly") {
+				month, err := monthsElapsed(f.Month)
+				if err != nil {
+					return err
+				}
+
+				p.Funds[i].Quantity = float64(month)
+			}
+			continue
+		}
+
 		nav, err := parseNAV(lines, f.Symbol)
 		if err != nil {
 			return fmt.Errorf("err, failed to fetch value: %v for %s", err, f.Name)
@@ -131,14 +162,34 @@ func loadFunds(fileName string) ([]Fund, error) {
 	return p.Funds, nil
 }
 
-func handlePortfolio(w http.ResponseWriter, req *http.Request) {
+func loadPortfolios() (Portfolio, error) {
 	p := Portfolio{Funds: []Fund{}}
 
-	funds, _ := loadFunds(".debt_portfolio")
-	p.Funds = append(p.Funds, funds...)
+	dir, err := os.ReadDir(".")
+	if err != nil {
+		return Portfolio{}, err
+	}
 
-	funds, _ = loadFunds(".equity_portfolio")
-	p.Funds = append(p.Funds, funds...)
+	for _, entry := range dir {
+		if !entry.IsDir() && strings.HasPrefix(entry.Name(), ".portfolio") && !strings.Contains(entry.Name(), "example") {
+			funds, err := loadFunds(entry.Name())
+			if err != nil {
+				return Portfolio{}, err
+			}
+
+			p.Funds = append(p.Funds, funds...)
+		}
+	}
+
+	return p, nil
+}
+
+func handlePortfolio(w http.ResponseWriter, req *http.Request) {
+	p, err := loadPortfolios()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
 
 	if err := p.updateCurrentPrice(); err != nil {
 		handleHTTPError(w, err)
@@ -218,7 +269,7 @@ func savePortfolio(account, requestToken string) error {
 		return err
 	}
 
-	fileName := fmt.Sprintf(".%s_portfolio", strings.ToLower(account))
+	fileName := fmt.Sprintf(".portfolio_%s", strings.ToLower(account))
 	return os.WriteFile(fileName, data, 0644)
 }
 
