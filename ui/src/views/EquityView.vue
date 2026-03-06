@@ -76,9 +76,9 @@ const holdings = computed<HoldingItem[]>(() => {
 })
 
 const targets = computed(() => [
-  { key: 'large-cap', label: 'Large Cap %', value: largeCapTarget.value },
-  { key: 'mid-cap', label: 'Mid Cap %', value: midCapTarget.value },
-  { key: 'small-cap', label: 'Small Cap %', value: smallCapTarget.value },
+  { key: 'large-cap', label: 'Large %', value: largeCapTarget.value },
+  { key: 'mid-cap', label: 'Mid %', value: midCapTarget.value },
+  { key: 'small-cap', label: 'Small %', value: smallCapTarget.value },
 ])
 
 const updateTarget = ({ key, value }: { key: string; value: number }) => {
