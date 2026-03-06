@@ -17,9 +17,12 @@ import (
 )
 
 const (
-	Equity = "equity"
-	Debt   = "debt"
-	Gold   = "gold"
+	Equity         = "equity"
+	Debt           = "debt"
+	Gold           = "gold"
+	LargeCapEquity = "large cap"
+	MidCapEquity   = "mid cap"
+	SmallCapEquity = "small cap"
 )
 
 type Fund struct {
@@ -219,7 +222,67 @@ func handlePortfolio(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Fprintf(w, string(data))
+	fmt.Fprint(w, string(data))
+
+	log.Printf("200 ok: %v", string(data))
+}
+
+func classifyEquityCategory(name string) string {
+	upper := strings.ToUpper(name)
+
+	if strings.Contains(upper, "SMALL CAP") {
+		return SmallCapEquity
+	}
+
+	if strings.Contains(upper, "MID CAP") {
+		return MidCapEquity
+	}
+
+	return LargeCapEquity
+}
+
+func handleEquityCategories(w http.ResponseWriter, req *http.Request) {
+	p, err := loadPortfolios()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	if err := p.updateCurrentPrice(); err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	allocations := []Allocation{
+		{Name: LargeCapEquity, Amount: 0.0},
+		{Name: MidCapEquity, Amount: 0.0},
+		{Name: SmallCapEquity, Amount: 0.0},
+	}
+
+	for _, f := range p.Funds {
+		if f.Class != Equity {
+			continue
+		}
+
+		amount := f.Quantity * f.Price
+		switch classifyEquityCategory(f.Name) {
+		case LargeCapEquity:
+			allocations[0].Amount += amount
+		case MidCapEquity:
+			allocations[1].Amount += amount
+		case SmallCapEquity:
+			allocations[2].Amount += amount
+		}
+	}
+
+	data, err := json.Marshal(allocations)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
 
 	log.Printf("200 ok: %v", string(data))
 }
@@ -305,6 +368,7 @@ func main() {
 	frontendHandler := http.FileServer(http.FS(distFS))
 
 	http.HandleFunc("/api/portfolio", handlePortfolio)
+	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
 	http.HandleFunc("/login/", handleLogin)
 	http.HandleFunc("/auth/", handleAuthRedirect)
 
