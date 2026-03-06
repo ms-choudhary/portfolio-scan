@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -276,19 +277,13 @@ func handleEquityCategories(w http.ResponseWriter, req *http.Request) {
 		switch classifyEquityCategory(f.Name) {
 		case LargeCapEquity:
 			allocations[0].Amount += amount
-			log.Printf("fund: %s, category: %s, amount: %f", f.Name, LargeCapEquity, amount)
 		case MidCapEquity:
 			allocations[1].Amount += amount
-			log.Printf("fund: %s, category: %s, amount: %f", f.Name, MidCapEquity, amount)
 		case SmallCapEquity:
 			allocations[2].Amount += amount
-			log.Printf("fund: %s, category: %s, amount: %f", f.Name, SmallCapEquity, amount)
 		case LargeMidCapEquity:
 			allocations[0].Amount += amount / 2
 			allocations[1].Amount += amount / 2
-
-			log.Printf("fund: %s, category: %s, amount: %f", f.Name, LargeCapEquity, amount/2)
-			log.Printf("fund: %s, category: %s, amount: %f", f.Name, MidCapEquity, amount/2)
 		}
 	}
 
@@ -396,6 +391,25 @@ func main() {
 		if strings.HasPrefix(r.URL.Path, "/login") || strings.HasPrefix(r.URL.Path, "/return") {
 			return
 		}
+
+		path := strings.TrimPrefix(r.URL.Path, "/")
+		if path == "" {
+			path = "index.html"
+		}
+
+		// serve index.html for any path that does not exists
+		// and let vue handle the routing
+		_, err := distFS.Open(path)
+		if err != nil {
+			r2 := new(http.Request)
+			*r2 = *r
+			r2.URL = new(url.URL)
+			*r2.URL = *r.URL
+			r2.URL.Path = "/"
+			frontendHandler.ServeHTTP(w, r2)
+			return
+		}
+
 		frontendHandler.ServeHTTP(w, r)
 	})
 
