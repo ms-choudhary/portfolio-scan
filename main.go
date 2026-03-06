@@ -17,12 +17,13 @@ import (
 )
 
 const (
-	Equity         = "equity"
-	Debt           = "debt"
-	Gold           = "gold"
-	LargeCapEquity = "large cap"
-	MidCapEquity   = "mid cap"
-	SmallCapEquity = "small cap"
+	Equity            = "equity"
+	Debt              = "debt"
+	Gold              = "gold"
+	LargeCapEquity    = "large cap"
+	MidCapEquity      = "mid cap"
+	LargeMidCapEquity = "large mid cap"
+	SmallCapEquity    = "small cap"
 )
 
 type Fund struct {
@@ -234,7 +235,10 @@ func classifyEquityCategory(name string) string {
 		return SmallCapEquity
 	}
 
-	if strings.Contains(upper, "MID CAP") {
+	if strings.Contains(upper, "MID CAP") || strings.Contains(upper, "MIDCAP") {
+		if strings.Contains(upper, "LARGE") {
+			return LargeMidCapEquity
+		}
 		return MidCapEquity
 	}
 
@@ -264,14 +268,27 @@ func handleEquityCategories(w http.ResponseWriter, req *http.Request) {
 			continue
 		}
 
+		if strings.Contains(f.Name, "NPS") {
+			continue
+		}
+
 		amount := f.Quantity * f.Price
 		switch classifyEquityCategory(f.Name) {
 		case LargeCapEquity:
 			allocations[0].Amount += amount
+			log.Printf("fund: %s, category: %s, amount: %f", f.Name, LargeCapEquity, amount)
 		case MidCapEquity:
 			allocations[1].Amount += amount
+			log.Printf("fund: %s, category: %s, amount: %f", f.Name, MidCapEquity, amount)
 		case SmallCapEquity:
 			allocations[2].Amount += amount
+			log.Printf("fund: %s, category: %s, amount: %f", f.Name, SmallCapEquity, amount)
+		case LargeMidCapEquity:
+			allocations[0].Amount += amount / 2
+			allocations[1].Amount += amount / 2
+
+			log.Printf("fund: %s, category: %s, amount: %f", f.Name, LargeCapEquity, amount/2)
+			log.Printf("fund: %s, category: %s, amount: %f", f.Name, MidCapEquity, amount/2)
 		}
 	}
 

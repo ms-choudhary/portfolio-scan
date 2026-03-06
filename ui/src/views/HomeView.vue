@@ -116,7 +116,7 @@ const updateCashAmount = (value: string) => {
   <div v-else-if="error" class="text-center mt-8 text-red-600">{{ error }}</div>
   <AllocationDashboard
     v-else
-    title="Total Portfolio"
+    title="All"
     :total-amount="totalAmount"
     :holdings="holdings"
     :donut-colors="['orange', 'blue', 'green', 'gray']"

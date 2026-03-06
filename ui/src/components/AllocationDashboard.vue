@@ -52,7 +52,7 @@ const formatCurrency = (amount: number) => Math.round(amount).toLocaleString('en
 
 <template>
   <h1 class="block ml-auto mr-auto text-2xl font-bold text-center mb-4">
-    {{ title }}: ₹ {{ formatCurrency(totalAmount) }}
+    ₹ {{ formatCurrency(totalAmount) }}
   </h1>
 
   <div class="block ml-auto mr-auto mb-8 mt-8 max-w-md">
