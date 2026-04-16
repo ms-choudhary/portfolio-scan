@@ -2,6 +2,7 @@
 import { computed, onMounted, ref, watch } from 'vue'
 import AllocationDashboard, { type HoldingItem } from '@/components/AllocationDashboard.vue'
 
+const cashAmount = ref('')
 const input = ref<Array<{ name: string; amount: number }>>([])
 const loading = ref(true)
 const error = ref('')
@@ -27,19 +28,25 @@ const fetchPortfolio = async () => {
 }
 
 onMounted(() => {
+  cashAmount.value = localStorage.getItem('equityCashAmount') ?? ''
   largeCapTarget.value = Number(localStorage.getItem('largeCapTarget') ?? '50')
   midCapTarget.value = Number(localStorage.getItem('midCapTarget') ?? '30')
   smallCapTarget.value = Number(localStorage.getItem('smallCapTarget') ?? '20')
   fetchPortfolio()
 })
 
+watch(cashAmount, (value) => localStorage.setItem('equityCashAmount', value))
 watch(largeCapTarget, (value) => localStorage.setItem('largeCapTarget', value.toString()))
 watch(midCapTarget, (value) => localStorage.setItem('midCapTarget', value.toString()))
 watch(smallCapTarget, (value) => localStorage.setItem('smallCapTarget', value.toString()))
 
 const totalTargetPercent = computed(() => largeCapTarget.value + midCapTarget.value + smallCapTarget.value)
 
-const totalAmount = computed(() => input.value.reduce((sum, item) => sum + item.amount, 0))
+const totalAmount = computed(() => {
+  const equityTotal = input.value.reduce((sum, item) => sum + item.amount, 0)
+  const cash = parseFloat(cashAmount.value) || 0
+  return equityTotal + cash
+})
 
 const holdings = computed<HoldingItem[]>(() => {
   const result: HoldingItem[] = []
@@ -72,6 +79,17 @@ const holdings = computed<HoldingItem[]>(() => {
     }
   }
 
+  const cash = parseFloat(cashAmount.value) || 0
+  if (cash > 0) {
+    result.push({
+      name: 'cash',
+      label: 'Cash - 0%',
+      currentAmount: cash,
+      percent: (cash / totalAmount.value) * 100,
+      rebalanceAmount: -cash,
+    })
+  }
+
   return result
 })
 
@@ -85,6 +103,10 @@ const updateTarget = ({ key, value }: { key: string; value: number }) => {
   if (key === 'large-cap') largeCapTarget.value = value
   if (key === 'mid-cap') midCapTarget.value = value
   if (key === 'small-cap') smallCapTarget.value = value
+}
+
+const updateCashAmount = (value: string) => {
+  cashAmount.value = value
 }
 </script>
 
@@ -100,10 +122,13 @@ const updateTarget = ({ key, value }: { key: string; value: number }) => {
     title="Equity"
     :total-amount="totalAmount"
     :holdings="holdings"
-    :donut-colors="['orange', 'blue', 'green']"
+    :donut-colors="['orange', 'blue', 'green', 'gray']"
+    :show-cash-input="true"
+    :cash-amount="cashAmount"
     :show-target-allocation="true"
     :targets="targets"
     :total-target-percent="totalTargetPercent"
+    @update:cashAmount="updateCashAmount"
     @update:target="updateTarget"
   />
 </template>
