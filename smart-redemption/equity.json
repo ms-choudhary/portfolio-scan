@@ -1,0 +1,74 @@
+{
+  "funds": [
+    {
+      "name": "MIRAE ASSET ELSS TAX SAVER FUND - DIRECT PLAN",
+      "symbol": "INF769K01DM9",
+      "lsp": 55.029,
+      "exit_load_percent": 0,
+      "exit_load_days": 0
+    },
+    {
+      "name": "TATA SMALL CAP FUND - DIRECT PLAN",
+      "symbol": "INF277K011O1",
+      "lsp": 39.0592,
+      "exit_load_percent": 0.50,
+      "exit_load_days": 30
+    },
+    {
+      "name": "UTI NIFTY 50 INDEX FUND - DIRECT PLAN",
+      "symbol": "INF789F01XA0",
+      "lsp": 169.1373,
+      "exit_load_percent": 0,
+      "exit_load_days": 0
+    },
+    {
+      "name": "EDELWEISS MID CAP FUND - DIRECT PLAN",
+      "symbol": "INF843K01AO4",
+      "lsp": 119.861,
+      "exit_load_percent": 1,
+      "exit_load_days": 90
+    },
+    {
+      "name": "HDFC SMALL CAP FUND - DIRECT PLAN",
+      "symbol": "INF179KA1RW5",
+      "lsp": 150.844,
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "name": "DSP ELSS TAX SAVER FUND - DIRECT PLAN",
+      "symbol": "INF740K01OK1",
+      "lsp": 153.018,
+      "exit_load_percent": 0,
+      "exit_load_days": 0
+    },
+    {
+      "name": "NIPPON INDIA SMALL CAP FUND - DIRECT PLAN",
+      "symbol": "INF204K01K15",
+      "lsp": 186.3352,
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "name": "KOTAK MIDCAP FUND - DIRECT PLAN",
+      "symbol": "INF174K01LT0",
+      "lsp": 158.951,
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "name": "KOTAK LARGE u0026 MIDCAP FUND - DIRECT PLAN",
+      "symbol": "INF174K01LF9",
+      "lsp": 397.48,
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "name": "MOTILAL OSWAL MIDCAP FUND - DIRECT PLAN",
+      "symbol": "INF247L01445",
+      "lsp": 106.3813,
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    }
+  ]
+}
