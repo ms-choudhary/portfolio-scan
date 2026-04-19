@@ -15,5 +15,4 @@ ui/dist-ssr
 portfolio-scan
 .portfolio*
 
-smart-redemption/transactions.json
-smart-redemption/equity.json
+smart-redemption/*.json
