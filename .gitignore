@@ -14,3 +14,6 @@ ui/dist-ssr
 .envrc
 portfolio-scan
 .portfolio*
+
+smart-redemption/transactions.json
+smart-redemption/equity.json

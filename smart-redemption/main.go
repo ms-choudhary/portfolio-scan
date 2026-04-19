@@ -1,10 +1,13 @@
 package main
 
 import (
+	"cmp"
 	"encoding/json"
 	"fmt"
 	"log"
+	"math"
 	"os"
+	"slices"
 	"time"
 )
 
@@ -47,12 +50,18 @@ type Lot struct {
 
 type Candidate struct {
 	Fund        *Fund
+	LotNumber   int
 	UnitsToSell float64
 	TotalValue  float64
 	PnL         float64
 	ExitLoad    float64
 	STCGTax     float64
 	LTCGTax     float64
+}
+
+type RedemptionRequest struct {
+	Amount       float64
+	FundsToAvoid []string
 }
 
 type RedemptionResponse struct {
@@ -101,23 +110,27 @@ func daysFromToday(date time.Time) int {
 	return int(d.Hours() / 24)
 }
 
-func calculateExitLoad(lot Lot) float64 {
+func calculatePnL(lot Lot, units float64) float64 {
+	return (lot.Fund.LSP - lot.Price) * units
+}
+
+func calculateExitLoad(lot Lot, units float64) float64 {
 	if lot.Age < lot.Fund.ExitLoadDays {
-		return (lot.Fund.LSP * lot.Qty * lot.Fund.ExitLoadPercent) / 100
+		return (lot.Fund.LSP * units * lot.Fund.ExitLoadPercent) / 100
 	}
 	return 0.0
 }
 
-func calculateSTCGTax(lot Lot) float64 {
-	if lot.Age < 365 && lot.PnL > 0 {
-		return lot.PnL * 0.2
+func calculateSTCGTax(age int, pnl float64) float64 {
+	if age < 365 && pnl > 0 {
+		return pnl * 0.2
 	}
 	return 0.0
 }
 
-func calculateLTCGTax(lot Lot) float64 {
-	if lot.Age >= 365 && lot.PnL > 0 {
-		return lot.PnL * 0.125
+func calculateLTCGTax(age int, pnl float64) float64 {
+	if age >= 365 && pnl > 0 {
+		return pnl * 0.125
 	}
 	return 0.0
 }
@@ -157,10 +170,10 @@ func main() {
 		}
 
 		lot.Age = daysFromToday(t.Date)
-		lot.PnL = (f.LSP - lot.Price) * t.Qty
-		lot.ExitLoad = calculateExitLoad(lot)
-		lot.STCGTax = calculateSTCGTax(lot)
-		lot.LTCGTax = calculateLTCGTax(lot)
+		lot.PnL = calculatePnL(lot, lot.Qty)
+		lot.ExitLoad = calculateExitLoad(lot, lot.Qty)
+		lot.STCGTax = calculateSTCGTax(lot.Age, lot.PnL)
+		lot.LTCGTax = calculateLTCGTax(lot.Age, lot.PnL)
 
 		if len(lot.Fund.Lots) == 0 {
 			lot.TotalExitLoad = lot.ExitLoad
@@ -181,11 +194,80 @@ func main() {
 	}
 
 	for _, f := range fundsBySymbol {
-		fmt.Println(f.Name)
-		fmt.Println("=========================")
-		lastLot := f.Lots[len(f.Lots)-1]
-		fmt.Printf("units: %f, exit load: %f, stcg: %f, ltcg: %f, pnl: %f\n", lastLot.TotalQty, lastLot.TotalExitLoad, lastLot.TotalSTCGTax, lastLot.TotalLTCGTax, lastLot.TotalPnL)
-		fmt.Println("=========================")
+		fmt.Println(f.Name, f.Lots[len(f.Lots)-1].TotalQty)
+	}
+
+	allLots := []Lot{}
+	for _, f := range fundsBySymbol {
+		allLots = append(allLots, f.Lots...)
+	}
+
+	compareLots := func(a, b Lot) int {
+		totalCostA := a.TotalExitLoad + a.TotalSTCGTax
+		totalCostB := b.TotalExitLoad + b.TotalSTCGTax
+
+		if n := cmp.Compare(totalCostA, totalCostB); n != 0 {
+			return n
+		}
+
+		return cmp.Compare(math.Abs(a.TotalPnL), math.Abs(b.TotalPnL))
+	}
+
+	slices.SortFunc(allLots, compareLots)
+
+	req := RedemptionRequest{
+		Amount:       300000.0,
+		FundsToAvoid: []string{},
+	}
+
+	i := 0
+	remaining := req.Amount
+	fundsToSell := map[string]Candidate{}
+
+	for i < len(allLots) && remaining > 1e-2 {
+		lot := allLots[i]
+		i++
+
+		if slices.Contains(req.FundsToAvoid, lot.Fund.Symbol) {
+			continue
+		}
+
+		if candidate, exists := fundsToSell[lot.Fund.Symbol]; exists {
+			if lot.Number < candidate.LotNumber {
+				continue
+			} else {
+				remaining += candidate.UnitsToSell * candidate.Fund.LSP
+			}
+		}
+
+		unitsToSell := lot.TotalQty
+		if remaining < lot.TotalQty*lot.Fund.LSP {
+			unitsToSell = remaining / lot.Fund.LSP
+		}
+
+		fundsToSell[lot.Fund.Symbol] = Candidate{
+			Fund:        lot.Fund,
+			LotNumber:   lot.Number,
+			UnitsToSell: unitsToSell,
+			TotalValue:  unitsToSell * lot.Fund.LSP,
+			PnL:         lot.TotalPnL - lot.PnL + calculatePnL(lot, unitsToSell),
+			ExitLoad:    lot.TotalExitLoad - lot.ExitLoad + calculateExitLoad(lot, unitsToSell),
+			STCGTax:     lot.TotalSTCGTax - lot.STCGTax + calculateSTCGTax(lot.Age, calculatePnL(lot, unitsToSell)),
+			LTCGTax:     lot.TotalLTCGTax - lot.LTCGTax + calculateLTCGTax(lot.Age, calculatePnL(lot, unitsToSell)),
+		}
+
+		remaining -= unitsToSell * lot.Fund.LSP
+		fmt.Printf("sell %d lot of %f units of fund %s, remaining: %f\n", lot.Number, unitsToSell, lot.Fund.Name, remaining)
+	}
+
+	if i == len(allLots) {
+		fmt.Println("insufficient balance")
+	}
+
+	for _, f := range fundsToSell {
+		fmt.Println(f.Fund.Name)
+		fmt.Println("===========================")
+		fmt.Printf("units: %f, total value: %f, pnl: %f, exit load: %f, stcg: %f, ltcg: %f\n", f.UnitsToSell, f.TotalValue, f.PnL, f.ExitLoad, f.STCGTax, f.LTCGTax)
 	}
 
 	// add all transactions to database from cas statement
