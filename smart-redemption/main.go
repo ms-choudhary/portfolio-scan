@@ -135,13 +135,50 @@ func calculateLTCGTax(age int, pnl float64) float64 {
 	return 0.0
 }
 
+func (f *Fund) computeAccumulatedValues() {
+	for i, lot := range f.Lots {
+		if i == 0 {
+			f.Lots[i].TotalExitLoad = lot.ExitLoad
+			f.Lots[i].TotalQty = lot.Qty
+			f.Lots[i].TotalSTCGTax = lot.STCGTax
+			f.Lots[i].TotalLTCGTax = lot.LTCGTax
+			f.Lots[i].TotalPnL = lot.PnL
+		} else {
+			lastLot := f.Lots[i-1]
+			f.Lots[i].TotalExitLoad = lot.ExitLoad + lastLot.TotalExitLoad
+			f.Lots[i].TotalQty = lot.Qty + lastLot.TotalQty
+			f.Lots[i].TotalSTCGTax = lot.STCGTax + lastLot.TotalSTCGTax
+			f.Lots[i].TotalLTCGTax = lot.LTCGTax + lastLot.TotalLTCGTax
+			f.Lots[i].TotalPnL = lot.PnL + lastLot.TotalPnL
+		}
+	}
+}
+
+func (f *Fund) removeRedeemedLots(units float64) {
+	remaining := units
+	i := 0
+	for ; i < len(f.Lots) && remaining > 1e-2; i++ {
+		if remaining < f.Lots[i].Qty {
+			newqty := f.Lots[i].Qty - remaining
+			f.Lots[i].Qty = newqty
+			f.Lots[i].PnL = calculatePnL(f.Lots[i], newqty)
+			f.Lots[i].ExitLoad = calculateExitLoad(f.Lots[i], newqty)
+			f.Lots[i].STCGTax = calculateSTCGTax(f.Lots[i].Age, f.Lots[i].PnL)
+			f.Lots[i].LTCGTax = calculateLTCGTax(f.Lots[i].Age, f.Lots[i].PnL)
+			break
+		}
+		remaining -= f.Lots[i].Qty
+	}
+	f.Lots = f.Lots[i:]
+}
+
 func main() {
-	transactions, err := loadTxns("transactions.json")
+	transactions, err := loadTxns("dbtransactions.json")
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
 
-	funds, err := loadFunds("equity.json")
+	funds, err := loadFunds("debt.json")
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
@@ -162,6 +199,12 @@ func main() {
 			f.Lots = []Lot{}
 		}
 
+		// redemption
+		if t.Qty < 0 {
+			f.removeRedeemedLots(math.Abs(t.Qty))
+			continue
+		}
+
 		lot := Lot{
 			Fund:   f,
 			Number: len(f.Lots),
@@ -175,27 +218,15 @@ func main() {
 		lot.STCGTax = calculateSTCGTax(lot.Age, lot.PnL)
 		lot.LTCGTax = calculateLTCGTax(lot.Age, lot.PnL)
 
-		if len(lot.Fund.Lots) == 0 {
-			lot.TotalExitLoad = lot.ExitLoad
-			lot.TotalQty = lot.Qty
-			lot.TotalSTCGTax = lot.STCGTax
-			lot.TotalLTCGTax = lot.LTCGTax
-			lot.TotalPnL = lot.PnL
-		} else {
-			lastLot := f.Lots[len(f.Lots)-1]
-			lot.TotalExitLoad = lot.ExitLoad + lastLot.TotalExitLoad
-			lot.TotalQty = lot.Qty + lastLot.TotalQty
-			lot.TotalSTCGTax = lot.STCGTax + lastLot.TotalSTCGTax
-			lot.TotalLTCGTax = lot.LTCGTax + lastLot.TotalLTCGTax
-			lot.TotalPnL = lot.PnL + lastLot.TotalPnL
-		}
-
 		f.Lots = append(f.Lots, lot)
 	}
 
 	for _, f := range fundsBySymbol {
+		f.computeAccumulatedValues()
 		fmt.Println(f.Name, f.Lots[len(f.Lots)-1].TotalQty)
 	}
+
+	return
 
 	allLots := []Lot{}
 	for _, f := range fundsBySymbol {
@@ -269,11 +300,4 @@ func main() {
 		fmt.Println("===========================")
 		fmt.Printf("units: %f, total value: %f, pnl: %f, exit load: %f, stcg: %f, ltcg: %f\n", f.UnitsToSell, f.TotalValue, f.PnL, f.ExitLoad, f.STCGTax, f.LTCGTax)
 	}
-
-	// add all transactions to database from cas statement
-	// get transactions from database
-	// construct funds with lots with accumulated
-	// get all lots from all funds, sort them based on (total_exit_load + totaltax) lowest
-	// pick lots till request satisfied
-	// construct candidates from the lots; accumulate in redemption request
 }
