@@ -9,6 +9,8 @@ import (
 	"os"
 	"slices"
 	"time"
+
+	"smart-redemption/nav"
 )
 
 type Transaction struct {
@@ -23,7 +25,7 @@ type Fund struct {
 	Name            string  `json:"name"`
 	ExitLoadPercent float64 `json:"exit_load_percent,omitempty"`
 	ExitLoadDays    int     `json:"exit_load_days,omitempty"`
-	LSP             float64 `json:"lsp"` // Last Traded Price
+	LTP             float64 `json:"ltp,omitempty"` // Last Traded Price
 	Lots            []Lot   `json:"lots,omitempty"`
 }
 
@@ -84,6 +86,24 @@ func loadFunds(fileName string) ([]Fund, error) {
 		return []Fund{}, err
 	}
 
+	symbols := []string{}
+	for _, f := range funds.Funds {
+		symbols = append(symbols, f.Symbol)
+	}
+
+	if err := nav.UpdateNAVs(symbols); err != nil {
+		log.Printf("failed to update navs: %v", err)
+	}
+
+	for i, f := range funds.Funds {
+		ltp, err := nav.Get(f.Symbol)
+		if err != nil {
+			return []Fund{}, err
+		}
+
+		funds.Funds[i].LTP = ltp
+	}
+
 	return funds.Funds, nil
 }
 
@@ -111,12 +131,12 @@ func daysFromToday(date time.Time) int {
 }
 
 func calculatePnL(lot Lot, units float64) float64 {
-	return (lot.Fund.LSP - lot.Price) * units
+	return (lot.Fund.LTP - lot.Price) * units
 }
 
 func calculateExitLoad(lot Lot, units float64) float64 {
 	if lot.Age < lot.Fund.ExitLoadDays {
-		return (lot.Fund.LSP * units * lot.Fund.ExitLoadPercent) / 100
+		return (lot.Fund.LTP * units * lot.Fund.ExitLoadPercent) / 100
 	}
 	return 0.0
 }
@@ -173,18 +193,17 @@ func (f *Fund) removeRedeemedLots(units float64) {
 }
 
 func main() {
-	transactions, err := loadTxns("dbtransactions.json")
+	transactions, err := loadTxns("transactions.json")
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
 
-	funds, err := loadFunds("debt.json")
+	funds, err := loadFunds("alldebt.json")
 	if err != nil {
 		log.Fatalf("err: %v", err)
 	}
 
 	fundsBySymbol := map[string]*Fund{}
-
 	for i, f := range funds {
 		fundsBySymbol[f.Symbol] = &funds[i]
 	}
@@ -223,10 +242,7 @@ func main() {
 
 	for _, f := range fundsBySymbol {
 		f.computeAccumulatedValues()
-		fmt.Println(f.Name, f.Lots[len(f.Lots)-1].TotalQty)
 	}
-
-	return
 
 	allLots := []Lot{}
 	for _, f := range fundsBySymbol {
@@ -247,7 +263,7 @@ func main() {
 	slices.SortFunc(allLots, compareLots)
 
 	req := RedemptionRequest{
-		Amount:       300000.0,
+		Amount:       4500000.0,
 		FundsToAvoid: []string{},
 	}
 
@@ -267,27 +283,27 @@ func main() {
 			if lot.Number < candidate.LotNumber {
 				continue
 			} else {
-				remaining += candidate.UnitsToSell * candidate.Fund.LSP
+				remaining += candidate.UnitsToSell * candidate.Fund.LTP
 			}
 		}
 
 		unitsToSell := lot.TotalQty
-		if remaining < lot.TotalQty*lot.Fund.LSP {
-			unitsToSell = remaining / lot.Fund.LSP
+		if remaining < lot.TotalQty*lot.Fund.LTP {
+			unitsToSell = remaining / lot.Fund.LTP
 		}
 
 		fundsToSell[lot.Fund.Symbol] = Candidate{
 			Fund:        lot.Fund,
 			LotNumber:   lot.Number,
 			UnitsToSell: unitsToSell,
-			TotalValue:  unitsToSell * lot.Fund.LSP,
+			TotalValue:  unitsToSell * lot.Fund.LTP,
 			PnL:         lot.TotalPnL - lot.PnL + calculatePnL(lot, unitsToSell),
 			ExitLoad:    lot.TotalExitLoad - lot.ExitLoad + calculateExitLoad(lot, unitsToSell),
 			STCGTax:     lot.TotalSTCGTax - lot.STCGTax + calculateSTCGTax(lot.Age, calculatePnL(lot, unitsToSell)),
 			LTCGTax:     lot.TotalLTCGTax - lot.LTCGTax + calculateLTCGTax(lot.Age, calculatePnL(lot, unitsToSell)),
 		}
 
-		remaining -= unitsToSell * lot.Fund.LSP
+		remaining -= unitsToSell * lot.Fund.LTP
 		fmt.Printf("sell %d lot of %f units of fund %s, remaining: %f\n", lot.Number, unitsToSell, lot.Fund.Name, remaining)
 	}
 
