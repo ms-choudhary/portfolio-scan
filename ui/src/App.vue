@@ -2,6 +2,7 @@
 import { computed, onMounted, onUnmounted, ref } from 'vue'
 import HomeView from '@/views/HomeView.vue'
 import EquityView from '@/views/EquityView.vue'
+import MutualFundsView from '@/views/MutualFundsView.vue'
 
 const path = ref(window.location.pathname)
 
@@ -20,6 +21,10 @@ onUnmounted(() => {
 const currentView = computed(() => {
   if (path.value === '/equity') {
     return EquityView
+  }
+
+  if (path.value === '/mutual-funds') {
+    return MutualFundsView
   }
 
   return HomeView
