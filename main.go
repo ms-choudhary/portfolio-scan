@@ -141,6 +141,30 @@ func handleEquityCategories(w http.ResponseWriter, req *http.Request) {
 	log.Printf("200 ok: %v", string(data))
 }
 
+func handleRecurringFunds(w http.ResponseWriter, req *http.Request) {
+	rfs, err := funds.GetRecurringFunds()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	response := []funds.RecurringFundResponse{}
+	for _, f := range rfs {
+		response = append(response, f.ToResponse())
+	}
+
+	data, err := json.Marshal(response)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
+
+	log.Printf("200 ok: get recurring funds")
+}
+
 func main() {
 	distFS, err := fs.Sub(frontendFS, "ui/dist")
 	if err != nil {
@@ -152,6 +176,7 @@ func main() {
 	http.HandleFunc("/api/portfolio", handlePortfolio)
 	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
 	http.HandleFunc("/api/mutual_funds", handleMutualFunds)
+	http.HandleFunc("/api/recurring_funds", handleRecurringFunds)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api") {

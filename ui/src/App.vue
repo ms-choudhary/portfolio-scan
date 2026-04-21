@@ -3,6 +3,7 @@ import { computed, onMounted, onUnmounted, ref } from 'vue'
 import HomeView from '@/views/HomeView.vue'
 import EquityView from '@/views/EquityView.vue'
 import MutualFundsView from '@/views/MutualFundsView.vue'
+import RecurringFundsView from '@/views/RecurringFundsView.vue'
 
 const path = ref(window.location.pathname)
 
@@ -25,6 +26,10 @@ const currentView = computed(() => {
 
   if (path.value === '/mutual-funds') {
     return MutualFundsView
+  }
+
+  if (path.value === '/recurring-funds') {
+    return RecurringFundsView
   }
 
   return HomeView

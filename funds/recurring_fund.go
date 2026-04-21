@@ -19,6 +19,18 @@ type RecurringFund struct {
 	TotalValue    float64  `json:"-"`
 }
 
+type RecurringFundResponse struct {
+	Name       string
+	TotalValue float64
+}
+
+func (f RecurringFund) ToResponse() RecurringFundResponse {
+	return RecurringFundResponse{
+		Name:       f.Name,
+		TotalValue: f.TotalValue,
+	}
+}
+
 func loadRecurringFunds(fileName string) ([]RecurringFund, error) {
 	var funds struct {
 		RecurringFunds []RecurringFund `json:"recurring_funds"`
