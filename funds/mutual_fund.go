@@ -14,13 +14,15 @@ import (
 )
 
 type Transaction struct {
-	Symbol string    `json:"symbol"`
-	Price  float64   `json:"price"`
-	Qty    float64   `json:"qty"`
-	Date   time.Time `json:"date"`
+	Account string    `json:"account"`
+	Symbol  string    `json:"symbol"`
+	Price   float64   `json:"price"`
+	Qty     float64   `json:"qty"`
+	Date    time.Time `json:"date"`
 }
 
 type MutualFund struct {
+	Account         string   `json:"account"`
 	Category        Category `json:"category"`
 	SubCategory     Category `json:"sub_category"`
 	Symbol          string   `json:"symbol"`
@@ -273,6 +275,10 @@ func GetMutualFunds() ([]MutualFund, error) {
 			continue
 		}
 
+		if t.Account != f.Account {
+			continue
+		}
+
 		if len(f.Lots) == 0 {
 			f.Lots = []Lot{}
 		}
@@ -293,8 +299,10 @@ func GetMutualFunds() ([]MutualFund, error) {
 		lot.Age = daysFromToday(t.Date)
 		lot.PnL = calculatePnL(lot, lot.Qty)
 		lot.ExitLoad = calculateExitLoad(lot, lot.Qty)
-		lot.STCGTax = calculateSTCGTax(lot.Age, lot.PnL)
-		lot.LTCGTax = calculateLTCGTax(lot.Age, lot.PnL)
+		if f.Category == Equity {
+			lot.STCGTax = calculateSTCGTax(lot.Age, lot.PnL)
+			lot.LTCGTax = calculateLTCGTax(lot.Age, lot.PnL)
+		}
 
 		f.Lots = append(f.Lots, lot)
 	}

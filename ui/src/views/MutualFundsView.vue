@@ -145,9 +145,7 @@ onMounted(fetchMutualFunds)
                   :aria-label="`Toggle lots for ${fund.name}`"
                   @click="toggleExpanded(rowKey(index, fund.name))"
                 >
-                  <span :class="isExpanded(rowKey(index, fund.name)) ? 'inline-block rotate-90' : 'inline-block'">
-                    >
-                  </span>
+                  <span class="inline-block">{{ isExpanded(rowKey(index, fund.name)) ? '-' : '+' }}</span>
                 </button>
               </TableCell>
               <TableCell class="font-medium whitespace-normal">{{ fund.name }}</TableCell>

@@ -1,1218 +1,1421 @@
 {
   "transactions": [
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 90.931,
       "qty": 5.498,
       "date": "2023-01-10T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 91.072,
       "qty": 54.899,
       "date": "2023-01-16T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 91.586,
       "qty": 251.118,
       "date": "2023-01-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 89.7,
       "qty": 267.545,
       "date": "2023-02-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 90.055,
       "qty": 55.519,
       "date": "2023-02-15T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 87.919,
       "qty": 56.868,
       "date": "2023-03-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 87.477,
       "qty": 57.155,
       "date": "2023-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 90.592,
       "qty": 55.19,
       "date": "2023-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 94.038,
       "qty": 53.167,
       "date": "2023-06-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 98.188,
       "qty": 50.92,
       "date": "2023-07-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 101.545,
       "qty": 49.237,
       "date": "2023-08-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 105.04,
       "qty": 47.599,
       "date": "2023-09-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 105.192,
       "qty": 47.53,
       "date": "2023-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 102.662,
       "qty": 48.701,
       "date": "2023-11-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 122.351,
       "qty": 40.864,
       "date": "2024-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 126.965,
       "qty": 39.379,
       "date": "2024-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 125.499,
       "qty": 39.839,
       "date": "2024-04-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 131.432,
       "qty": 38.041,
       "date": "2024-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 128.691,
       "qty": 38.851,
       "date": "2024-06-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF740K01OK1",
       "price": 145.585,
       "qty": 34.342,
       "date": "2024-07-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 116.767,
       "qty": 0.856,
       "date": "2024-09-16T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 115.491,
       "qty": 216.456,
       "date": "2024-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 116.979,
       "qty": 213.703,
       "date": "2024-10-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 112.362,
       "qty": 222.484,
       "date": "2024-11-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 110.564,
       "qty": 226.102,
       "date": "2024-11-19T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 116.516,
       "qty": 214.552,
       "date": "2024-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 119.171,
       "qty": 209.772,
       "date": "2024-12-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 118.242,
       "qty": 211.42,
       "date": "2025-01-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 122.064,
       "qty": 227.328,
       "date": "2025-11-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 117.913,
       "qty": 376.53,
       "date": "2026-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 117.425,
       "qty": 264.411,
       "date": "2026-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF843K01AO4",
       "price": 110.19,
       "qty": 281.772,
       "date": "2026-04-01T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF179KA1RW5",
       "price": 159.873,
       "qty": 104.14,
       "date": "2025-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 230.855,
       "qty": 2.166,
       "date": "2023-02-21T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 228.543,
       "qty": 91.882,
       "date": "2023-03-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 227.824,
       "qty": 92.172,
       "date": "2023-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 237.132,
       "qty": 88.554,
       "date": "2023-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 246.865,
       "qty": 85.062,
       "date": "2023-06-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 257.044,
       "qty": 81.694,
       "date": "2023-07-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 265.868,
       "qty": 78.983,
       "date": "2023-08-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 274.581,
       "qty": 76.476,
       "date": "2023-09-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 276.331,
       "qty": 75.992,
       "date": "2023-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 269.281,
       "qty": 77.982,
       "date": "2023-11-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 310.224,
       "qty": 67.69,
       "date": "2024-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 324.633,
       "qty": 64.685,
       "date": "2024-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 330.81,
       "qty": 63.477,
       "date": "2024-04-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 342.631,
       "qty": 61.287,
       "date": "2024-06-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 379.621,
       "qty": 55.316,
       "date": "2024-07-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 386.846,
       "qty": 54.282,
       "date": "2024-08-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LF9",
       "price": 390.581,
       "qty": 53.763,
       "date": "2024-09-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 85.761,
       "qty": 1.166,
       "date": "2023-02-21T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 85.636,
       "qty": 81.737,
       "date": "2023-03-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 83.897,
       "qty": 83.431,
       "date": "2023-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 86.798,
       "qty": 80.643,
       "date": "2023-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 91.002,
       "qty": 76.918,
       "date": "2023-06-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 95.031,
       "qty": 73.656,
       "date": "2023-07-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 98.328,
       "qty": 71.187,
       "date": "2023-08-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 103.561,
       "qty": 67.59,
       "date": "2023-09-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 104.114,
       "qty": 67.231,
       "date": "2023-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 102.406,
       "qty": 68.352,
       "date": "2023-11-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 115.018,
       "qty": 60.857,
       "date": "2024-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 118.512,
       "qty": 59.063,
       "date": "2024-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 120.234,
       "qty": 58.217,
       "date": "2024-04-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 126.212,
       "qty": 55.459,
       "date": "2024-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 127.38,
       "qty": 54.951,
       "date": "2024-06-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 146.642,
       "qty": 47.733,
       "date": "2024-07-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 149.057,
       "qty": 46.96,
       "date": "2024-08-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF174K01LT0",
       "price": 154.487,
       "qty": 45.309,
       "date": "2024-09-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 34.519,
       "qty": 14.484,
       "date": "2023-01-10T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 34.358,
       "qty": 174.623,
       "date": "2023-01-16T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 34.697,
       "qty": 691.668,
       "date": "2023-01-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 34.026,
       "qty": 705.308,
       "date": "2023-02-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 34.245,
       "qty": 175.199,
       "date": "2023-02-15T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 33.479,
       "qty": 179.208,
       "date": "2023-03-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 33.55,
       "qty": 178.829,
       "date": "2023-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 34.885,
       "qty": 171.985,
       "date": "2023-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 35.981,
       "qty": 166.746,
       "date": "2023-06-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 37.709,
       "qty": 159.105,
       "date": "2023-07-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 38.825,
       "qty": 154.532,
       "date": "2023-08-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 39.924,
       "qty": 150.278,
       "date": "2023-09-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 39.838,
       "qty": 150.602,
       "date": "2023-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 38.595,
       "qty": 155.453,
       "date": "2023-11-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 44.981,
       "qty": 133.383,
       "date": "2024-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 46.377,
       "qty": 129.368,
       "date": "2024-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 46.429,
       "qty": 129.223,
       "date": "2024-04-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 47.821,
       "qty": 125.462,
       "date": "2024-05-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 46.226,
       "qty": 129.791,
       "date": "2024-06-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF769K01DM9",
       "price": 51.835,
       "qty": 115.746,
       "date": "2024-07-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 116.9651,
       "qty": 735.225,
       "date": "2024-09-09T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 116.9651,
       "qty": 4.275,
       "date": "2024-09-09T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 121.6732,
       "qty": 205.458,
       "date": "2024-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 122.286,
       "qty": 204.429,
       "date": "2024-10-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 117.0743,
       "qty": 213.529,
       "date": "2024-11-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 118.6176,
       "qty": 210.751,
       "date": "2024-11-19T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 125.356,
       "qty": 199.422,
       "date": "2024-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 130.0843,
       "qty": 192.173,
       "date": "2024-12-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 129.1344,
       "qty": 193.587,
       "date": "2025-01-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 110.135,
       "qty": 453.966,
       "date": "2025-02-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 101.498,
       "qty": 492.596,
       "date": "2025-03-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 104.2018,
       "qty": 479.814,
       "date": "2025-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 101.6027,
       "qty": 123.022,
       "date": "2025-04-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 119.8278,
       "qty": 463.142,
       "date": "2025-09-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 113.2734,
       "qty": 220.694,
       "date": "2025-09-29T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 117.8568,
       "qty": 470.887,
       "date": "2025-10-06T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 118.7434,
       "qty": 233.685,
       "date": "2025-11-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 117.5128,
       "qty": 377.812,
       "date": "2025-12-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 105.5445,
       "qty": 420.655,
       "date": "2026-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 99.8871,
       "qty": 310.835,
       "date": "2026-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF247L01445",
       "price": 95.6147,
       "qty": 324.725,
       "date": "2026-04-01T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 202.0666,
       "qty": 123.715,
       "date": "2024-09-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 200.0738,
       "qty": 124.948,
       "date": "2024-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 201.6568,
       "qty": 123.967,
       "date": "2024-10-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 196.5418,
       "qty": 127.193,
       "date": "2024-11-05T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 188.481,
       "qty": 132.633,
       "date": "2024-11-19T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 199.0944,
       "qty": 125.562,
       "date": "2024-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 200.2587,
       "qty": 124.832,
       "date": "2024-12-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 197.0126,
       "qty": 126.889,
       "date": "2025-01-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 174.5957,
       "qty": 143.181,
       "date": "2025-02-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 154.9158,
       "qty": 161.37,
       "date": "2025-03-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 169.7834,
       "qty": 147.239,
       "date": "2025-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 165.3721,
       "qty": 37.792,
       "date": "2025-04-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 189.1376,
       "qty": 146.711,
       "date": "2025-09-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 189.0205,
       "qty": 146.802,
       "date": "2025-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 193.607,
       "qty": 143.324,
       "date": "2025-11-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 187.2842,
       "qty": 88.898,
       "date": "2025-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 177.4721,
       "qty": 116.632,
       "date": "2026-03-06T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF204K01K15",
       "price": 171.9066,
       "qty": 90.306,
       "date": "2026-04-06T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 48.339,
       "qty": 517.155,
       "date": "2024-09-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 48.1144,
       "qty": 519.569,
       "date": "2024-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 49.0153,
       "qty": 510.019,
       "date": "2024-10-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 48.2402,
       "qty": 518.214,
       "date": "2024-11-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 45.8399,
       "qty": 545.349,
       "date": "2024-11-19T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 47.9613,
       "qty": 521.228,
       "date": "2024-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 48.3006,
       "qty": 517.566,
       "date": "2024-12-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 47.3037,
       "qty": 528.473,
       "date": "2025-01-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 41.4191,
       "qty": 603.556,
       "date": "2025-02-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 37.3062,
       "qty": 670.096,
       "date": "2025-03-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 41.1009,
       "qty": 608.229,
       "date": "2025-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 39.9376,
       "qty": 156.486,
       "date": "2025-04-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 45.1507,
       "qty": 614.578,
       "date": "2025-09-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 44.9068,
       "qty": 617.916,
       "date": "2025-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 36.3313,
       "qty": 569.728,
       "date": "2026-03-09T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF277K011O1",
       "price": 36.2215,
       "qty": 428.591,
       "date": "2026-04-06T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 172.2341,
       "qty": 5.806,
       "date": "2024-09-09T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 172.2341,
       "qty": 798.873,
       "date": "2024-09-09T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 174.37,
       "qty": 573.464,
       "date": "2024-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 171.2292,
       "qty": 291.992,
       "date": "2024-10-07T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 171.2292,
       "qty": 291.992,
       "date": "2024-10-07T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 171.6357,
       "qty": 582.6,
       "date": "2024-10-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 166.9989,
       "qty": 598.776,
       "date": "2024-10-25T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 165.8578,
       "qty": 602.896,
       "date": "2024-11-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 162.6285,
       "qty": 614.868,
       "date": "2024-11-19T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 169.1059,
       "qty": 591.316,
       "date": "2024-12-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 167.3063,
       "qty": 597.676,
       "date": "2024-12-18T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 159.5912,
       "qty": 626.57,
       "date": "2025-01-13T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 161.6828,
       "qty": 618.464,
       "date": "2025-02-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 153.2369,
       "qty": 652.552,
       "date": "2025-03-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 161.0414,
       "qty": 620.927,
       "date": "2025-04-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 158.6468,
       "qty": 157.575,
       "date": "2025-04-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 172.4756,
       "qty": 579.763,
       "date": "2025-09-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 172.6409,
       "qty": 63.713,
       "date": "2025-09-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 171.9125,
       "qty": 290.831,
       "date": "2025-09-29T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 173.7187,
       "qty": 575.614,
       "date": "2025-10-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 174.9961,
       "qty": 62.855,
       "date": "2025-10-06T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 179.9324,
       "qty": 555.736,
       "date": "2025-11-03T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 178.776,
       "qty": 61.526,
       "date": "2025-11-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 175.3493,
       "qty": 570.262,
       "date": "2026-02-02T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 171.16,
       "qty": 604.667,
       "date": "2026-03-04T00:00:00Z"
     },
     {
+      "account": "AXXXXXXX8F",
       "symbol": "INF789F01XA0",
       "price": 158.5449,
       "qty": 718.057,
       "date": "2026-04-01T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF209K01XK8",
       "price": 48.4738,
       "qty": 18565.803,
       "date": "2024-10-28T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF209K01XK8",
       "price": 51.5786,
       "qty": 24621.384,
       "date": "2025-06-05T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF209K01XK8",
       "price": 53.1311,
       "qty": -43187.187,
       "date": "2026-01-19T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01VJ3",
       "price": 24.01,
       "qty": 20.824,
       "date": "2024-10-28T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01VJ3",
       "price": 23.87,
       "qty": 1256.745,
       "date": "2024-11-18T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01VJ3",
       "price": 24.52,
       "qty": 1223.43,
       "date": "2024-12-16T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01VJ3",
       "price": 25.08,
       "qty": -2500.999,
       "date": "2025-07-16T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2790.0202,
       "qty": 14.336,
       "date": "2024-10-16T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2793.0944,
       "qty": 537.012,
       "date": "2024-10-22T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2801.1202,
       "qty": 14.279,
       "date": "2024-11-06T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2807.5255,
       "qty": -71.3,
       "date": "2024-11-17T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2816.9592,
       "qty": 14.199,
       "date": "2024-12-06T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2845.8564,
       "qty": -52,
       "date": "2025-01-27T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2888.7862,
       "qty": 5.192,
       "date": "2025-04-07T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2937.6055,
       "qty": 30.636,
       "date": "2025-07-11T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2940.8006,
       "qty": 21.422,
       "date": "2025-07-18T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 2979.5767,
       "qty": -67.15,
       "date": "2025-10-09T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 3005.44,
       "qty": -33.3,
       "date": "2025-12-03T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 3027.5543,
       "qty": -413.326,
       "date": "2026-01-19T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 3046.976,
       "qty": 65.636,
       "date": "2026-02-25T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF846K01CX4",
       "price": 3078.5786,
       "qty": 13.967,
       "date": "2026-04-15T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF109K012M7",
       "price": 259.4061,
       "qty": 0.385,
       "date": "2024-08-01T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF109K012M7",
       "price": 252.8891,
       "qty": -0.385,
       "date": "2024-10-28T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF769K01EK1",
       "price": 20.638,
       "qty": 2907.113,
       "date": "2024-10-16T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF769K01EK1",
       "price": 20.152,
       "qty": 1488.612,
       "date": "2024-11-18T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF769K01EK1",
       "price": 20.77,
       "qty": 1444.319,
       "date": "2024-12-16T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF769K01EK1",
       "price": 22.406,
       "qty": -5840.044,
       "date": "2026-01-19T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F01XA0",
       "price": 160.2112,
       "qty": 436.901,
       "date": "2025-01-22T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F01XA0",
       "price": 178.8367,
       "qty": -436.901,
       "date": "2026-01-19T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F1AWB9",
       "price": 23.0488,
       "qty": 4338.404,
       "date": "2025-10-06T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F1AWB9",
       "price": 23.1967,
       "qty": 4310.742,
       "date": "2025-10-07T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F1AWB9",
       "price": 24.5405,
       "qty": 4074.693,
       "date": "2025-10-20T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F1AWB9",
       "price": 23.6173,
       "qty": 4233.973,
       "date": "2025-10-23T00:00:00Z"
     },
     {
+      "account": "BOXXXXXX2N",
       "symbol": "INF789F1AWB9",
       "price": 32.1258,
       "qty": 933.782,
