@@ -66,6 +66,7 @@ type LotResponse struct {
 }
 
 type FundResponse struct {
+	Symbol     string
 	Name       string
 	Units      float64
 	TotalValue float64
@@ -112,6 +113,7 @@ func (f MutualFund) Value() float64 {
 
 func (f MutualFund) ToResponse() FundResponse {
 	response := FundResponse{
+		Symbol:     f.Symbol,
 		Name:       f.Name,
 		Units:      f.Lots[len(f.Lots)-1].TotalQty,
 		TotalValue: f.Lots[len(f.Lots)-1].TotalQty * f.LTP,

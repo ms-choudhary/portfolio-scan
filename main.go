@@ -23,7 +23,7 @@ type Allocation struct {
 var frontendFS embed.FS
 
 func handleHTTPError(w http.ResponseWriter, err error) {
-	fmt.Fprintf(w, "error: %v", err)
+	http.Error(w, fmt.Sprintf("error: %v", err), http.StatusInternalServerError)
 	log.Printf("error: %v", err)
 	return
 }
