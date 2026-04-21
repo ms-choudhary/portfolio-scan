@@ -10,7 +10,7 @@ import (
 	"slices"
 	"time"
 
-	"smart-redemption/nav"
+	"portfolio-scan/nav"
 )
 
 type Transaction struct {

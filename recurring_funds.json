@@ -1,0 +1,22 @@
+{
+  "recurring_funds": [
+    {
+      "category": "debt",
+      "sub_category": "pf",
+      "symbol": "PF",
+      "name": "PF",
+      "base_amount": 674224.0,
+      "start_from": "02/2026",
+      "monthly_amount": 56792.0
+    },
+    {
+      "category": "equity",
+      "sub_category": "large mid cap",
+      "symbol": "nps",
+      "name": "nps",
+      "base_amount": 505590.0,
+      "start_from": "02/2026",
+      "monthly_amount": 24041.0
+    }
+  ]
+}

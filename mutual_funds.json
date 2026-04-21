@@ -1,0 +1,96 @@
+{
+  "mutual_funds": [
+    {
+      "category": "equity",
+      "sub_category": "large cap",
+      "name": "MIRAE ASSET ELSS TAX SAVER FUND - DIRECT PLAN",
+      "symbol": "INF769K01DM9",
+      "exit_load_percent": 0,
+      "exit_load_days": 0
+    },
+    {
+      "category": "equity",
+      "sub_category": "small cap",
+      "name": "TATA SMALL CAP FUND - DIRECT PLAN",
+      "symbol": "INF277K011O1",
+      "exit_load_percent": 0.50,
+      "exit_load_days": 30
+    },
+    {
+      "category": "equity",
+      "sub_category": "large cap",
+      "name": "UTI NIFTY 50 INDEX FUND - DIRECT PLAN",
+      "symbol": "INF789F01XA0",
+      "exit_load_percent": 0,
+      "exit_load_days": 0
+    },
+    {
+      "category": "equity",
+      "sub_category": "mid cap",
+      "name": "EDELWEISS MID CAP FUND - DIRECT PLAN",
+      "symbol": "INF843K01AO4",
+      "exit_load_percent": 1,
+      "exit_load_days": 90
+    },
+    {
+      "category": "equity",
+      "sub_category": "small cap",
+      "name": "HDFC SMALL CAP FUND - DIRECT PLAN",
+      "symbol": "INF179KA1RW5",
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "category": "equity",
+      "sub_category": "large cap",
+      "name": "DSP ELSS TAX SAVER FUND - DIRECT PLAN",
+      "symbol": "INF740K01OK1",
+      "exit_load_percent": 0,
+      "exit_load_days": 0
+    },
+    {
+      "category": "equity",
+      "sub_category": "small cap",
+      "name": "NIPPON INDIA SMALL CAP FUND - DIRECT PLAN",
+      "symbol": "INF204K01K15",
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "category": "equity",
+      "sub_category": "mid cap",
+      "name": "KOTAK MIDCAP FUND - DIRECT PLAN",
+      "symbol": "INF174K01LT0",
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "category": "equity",
+      "sub_category": "large mid cap",
+      "name": "KOTAK LARGE u0026 MIDCAP FUND - DIRECT PLAN",
+      "symbol": "INF174K01LF9",
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "category": "equity",
+      "sub_category": "mid cap",
+      "name": "MOTILAL OSWAL MIDCAP FUND - DIRECT PLAN",
+      "symbol": "INF247L01445",
+      "exit_load_percent": 1,
+      "exit_load_days": 365
+    },
+    {
+      "category": "gold",
+      "sub_category": "etf",
+      "name": "UTI GOLD ETF FUND OF FUND - DIRECT PLAN",
+      "symbol": "INF789F1AWB9"
+    },
+    {
+      "category": "debt",
+      "sub_category": "liquid",
+      "name": "AXIS LIQUID FUND - DIRECT PLAN",
+      "symbol": "INF846K01CX4"
+    }
+  ]
+}
