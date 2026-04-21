@@ -1,6 +1,7 @@
 package main
 
 import (
+	"cmp"
 	"embed"
 	"encoding/json"
 	"fmt"
@@ -9,6 +10,7 @@ import (
 	"net/http"
 	"net/url"
 	"portfolio-scan/funds"
+	"slices"
 	"strings"
 )
 
@@ -59,6 +61,36 @@ func handlePortfolio(w http.ResponseWriter, req *http.Request) {
 	fmt.Fprint(w, string(data))
 
 	log.Printf("200 ok: %v", string(data))
+}
+
+func handleMutualFunds(w http.ResponseWriter, req *http.Request) {
+	mfs, err := funds.GetMutualFunds()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	response := []funds.FundResponse{}
+	for _, f := range mfs {
+		response = append(response, f.ToResponse())
+	}
+
+	compareFunds := func(a, b funds.FundResponse) int {
+		return cmp.Compare(a.TotalPnL, b.TotalPnL)
+	}
+
+	slices.SortFunc(response, compareFunds)
+
+	data, err := json.Marshal(response)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
+
+	log.Printf("200 ok: get mutual funds")
 }
 
 func handleEquityCategories(w http.ResponseWriter, req *http.Request) {
@@ -119,6 +151,7 @@ func main() {
 
 	http.HandleFunc("/api/portfolio", handlePortfolio)
 	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
+	http.HandleFunc("/api/mutual_funds", handleMutualFunds)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api") {

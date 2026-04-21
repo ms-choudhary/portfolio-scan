@@ -52,6 +52,25 @@ type Lot struct {
 	Accumulated
 }
 
+type LotResponse struct {
+	Number   int
+	Units    float64
+	Price    float64
+	Age      int
+	PnL      float64
+	ExitLoad float64
+	STCG     float64
+	LTCG     float64
+}
+
+type FundResponse struct {
+	Name       string
+	Units      float64
+	TotalValue float64
+	TotalPnL   float64
+	Lots       []LotResponse
+}
+
 type Candidate struct {
 	Fund        *MutualFund
 	LotNumber   int
@@ -86,6 +105,32 @@ func (f MutualFund) SubCategoryName() Category {
 
 func (f MutualFund) Value() float64 {
 	return f.Lots[len(f.Lots)-1].TotalQty * f.LTP
+}
+
+func (f MutualFund) ToResponse() FundResponse {
+	response := FundResponse{
+		Name:       f.Name,
+		Units:      f.Lots[len(f.Lots)-1].TotalQty,
+		TotalValue: f.Lots[len(f.Lots)-1].TotalQty * f.LTP,
+		TotalPnL:   f.Lots[len(f.Lots)-1].TotalPnL,
+		Lots:       []LotResponse{},
+	}
+
+	for i := len(f.Lots) - 1; i >= 0; i-- {
+		lotResponse := LotResponse{
+			Number:   f.Lots[i].Number,
+			Units:    f.Lots[i].Qty,
+			Price:    f.Lots[i].Price,
+			Age:      f.Lots[i].Age,
+			PnL:      f.Lots[i].PnL,
+			ExitLoad: f.Lots[i].TotalExitLoad,
+			STCG:     f.Lots[i].TotalSTCGTax,
+			LTCG:     f.Lots[i].TotalLTCGTax,
+		}
+		response.Lots = append(response.Lots, lotResponse)
+	}
+
+	return response
 }
 
 func loadMutualFunds(fileName string) ([]MutualFund, error) {
@@ -256,6 +301,9 @@ func GetMutualFunds() ([]MutualFund, error) {
 
 	result := []MutualFund{}
 	for _, f := range fundsBySymbol {
+		if len(f.Lots) == 0 {
+			continue
+		}
 		f.computeAccumulatedValues()
 		result = append(result, *f)
 	}
