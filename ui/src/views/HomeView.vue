@@ -113,9 +113,9 @@ const updateCashAmount = (value: string) => {
 
 <template>
   <div class="max-w-2xl mx-auto mt-4 px-4 text-right">
-    <a href="/mutual-funds" class="underline">Mutual Funds →</a>
+    <a href="/mutual-funds" class="underline">Mutual Funds</a>
     <span class="mx-2 text-muted-foreground">|</span>
-    <a href="/recurring-funds" class="underline">Recurring Funds →</a>
+    <a href="/recurring-funds" class="underline">Recurring Funds</a>
   </div>
 
   <div v-if="loading" class="text-center mt-8">Loading...</div>

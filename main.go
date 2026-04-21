@@ -165,6 +165,35 @@ func handleRecurringFunds(w http.ResponseWriter, req *http.Request) {
 	log.Printf("200 ok: get recurring funds")
 }
 
+func handleRedemption(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req funds.RedemptionRequest
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if req.Amount <= 0 {
+		http.Error(w, "amount must be greater than zero", http.StatusBadRequest)
+		return
+	}
+
+	resp, err := funds.SmartRedemption(req)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(resp)
+}
+
 func main() {
 	distFS, err := fs.Sub(frontendFS, "ui/dist")
 	if err != nil {
@@ -177,6 +206,7 @@ func main() {
 	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
 	http.HandleFunc("/api/mutual_funds", handleMutualFunds)
 	http.HandleFunc("/api/recurring_funds", handleRecurringFunds)
+	http.HandleFunc("/api/smart_redemption", handleRedemption)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
 		if strings.HasPrefix(r.URL.Path, "/api") {

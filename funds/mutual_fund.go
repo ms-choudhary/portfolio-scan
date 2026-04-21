@@ -74,27 +74,28 @@ type FundResponse struct {
 }
 
 type Candidate struct {
-	Fund        *MutualFund
-	LotNumber   int
-	UnitsToSell float64
-	TotalValue  float64
-	PnL         float64
-	ExitLoad    float64
-	STCGTax     float64
-	LTCGTax     float64
+	Fund        *MutualFund `json:"-"`
+	FundName    string      `json:"fund_name"`
+	LotNumber   int         `json:"lot_number"`
+	UnitsToSell float64     `json:"units_to_sell"`
+	TotalValue  float64     `json:"total_value"`
+	PnL         float64     `json:"pnl"`
+	ExitLoad    float64     `json:"exit_load"`
+	STCGTax     float64     `json:"stcg_tax"`
+	LTCGTax     float64     `json:"ltcg_tax"`
 }
 
 type RedemptionRequest struct {
-	Amount       float64
-	FundsToAvoid []string
+	Amount       float64  `json:"amount"`
+	FundsToAvoid []string `json:"funds_to_avoid"`
 }
 
 type RedemptionResponse struct {
-	Funds         []Candidate
-	TotalValue    float64
-	TotalExitLoad float64
-	TotalTax      float64
-	ActualValue   float64
+	Funds         []Candidate `json:"funds"`
+	TotalValue    float64     `json:"total_value"`
+	TotalExitLoad float64     `json:"total_exit_load"`
+	TotalTax      float64     `json:"total_tax"`
+	ActualValue   float64     `json:"actual_value"`
 }
 
 func (f MutualFund) CategoryName() Category {
@@ -329,6 +330,8 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 		return RedemptionResponse{}, err
 	}
 
+	log.Printf("received redemption request")
+
 	allLots := []Lot{}
 	for _, f := range funds {
 		if f.Category == Equity {
@@ -372,10 +375,14 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 		unitsToSell := lot.TotalQty
 		if remaining < lot.TotalQty*lot.Fund.LTP {
 			unitsToSell = remaining / lot.Fund.LTP
+		} else if unitsToSell*lot.Fund.LTP < 5000 {
+			log.Printf("skipping %d lot of fund %s as val %f less than 5k", lot.Number, lot.Fund.Name, unitsToSell*lot.Fund.LTP)
+			continue
 		}
 
 		fundsToSell[lot.Fund.Symbol] = Candidate{
 			Fund:        lot.Fund,
+			FundName:    lot.Fund.Name,
 			LotNumber:   lot.Number,
 			UnitsToSell: unitsToSell,
 			TotalValue:  unitsToSell * lot.Fund.LTP,
@@ -386,18 +393,28 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 		}
 
 		remaining -= unitsToSell * lot.Fund.LTP
-		fmt.Printf("sell %d lot of %f units of fund %s, remaining: %f\n", lot.Number, unitsToSell, lot.Fund.Name, remaining)
+		log.Printf("sell %d lot of %f units of fund %s, exit: %f, stcg: %f, ltcg: %f, | remaining: %f\n", lot.Number, unitsToSell, lot.Fund.Name, lot.TotalExitLoad, lot.TotalSTCGTax, lot.TotalLTCGTax, remaining)
 	}
 
 	if i == len(allLots) {
-		fmt.Println("insufficient balance")
+		return RedemptionResponse{}, fmt.Errorf("insufficient balance")
 	}
 
+	response := RedemptionResponse{Funds: []Candidate{}}
 	for _, f := range fundsToSell {
-		fmt.Println(f.Fund.Name)
-		fmt.Println("===========================")
-		fmt.Printf("units: %f, total value: %f, pnl: %f, exit load: %f, stcg: %f, ltcg: %f\n", f.UnitsToSell, f.TotalValue, f.PnL, f.ExitLoad, f.STCGTax, f.LTCGTax)
+		response.Funds = append(response.Funds, f)
+		response.TotalValue += f.TotalValue
+		response.TotalExitLoad += f.ExitLoad
+		response.TotalTax += f.STCGTax + f.LTCGTax
 	}
 
-	return RedemptionResponse{}, nil
+	sortByValueDesc := func(a, b Candidate) int {
+		return cmp.Compare(b.TotalValue, a.TotalValue)
+	}
+
+	slices.SortFunc(response.Funds, sortByValueDesc)
+
+	response.ActualValue = response.TotalValue - response.TotalExitLoad - response.TotalTax
+
+	return response, nil
 }
