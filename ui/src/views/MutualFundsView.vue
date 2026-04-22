@@ -140,7 +140,7 @@ onMounted(fetchMutualFunds)
               <TableCell>
                 <button
                   type="button"
-                  class="h-7 w-7 rounded border text-sm"
+                  class="flex h-8 w-8 items-center justify-center rounded-md !border-slate-300 !bg-white p-0 text-sm text-slate-700 shadow-none hover:!border-slate-400 hover:!bg-slate-50"
                   :aria-expanded="isExpanded(rowKey(index, fund.name))"
                   :aria-label="`Toggle lots for ${fund.name}`"
                   @click="toggleExpanded(rowKey(index, fund.name))"
