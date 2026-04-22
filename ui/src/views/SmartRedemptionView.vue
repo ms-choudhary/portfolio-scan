@@ -360,7 +360,10 @@ onMounted(fetchMutualFunds)
               class="flex items-center justify-between gap-4 border-b border-slate-200 pb-4 last:border-b-0 last:pb-0"
             >
               <CardDescription class="text-base sm:text-lg">{{ card.label }}</CardDescription>
-              <div class="text-right text-xl font-semibold sm:text-2xl">
+              <div
+                class="text-right text-xl font-semibold sm:text-2xl"
+                :class="card.label === 'Total PnL' ? amountClass(card.value) : ''"
+              >
                 {{ formatCurrency(card.value) }}
               </div>
             </div>
