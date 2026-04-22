@@ -247,20 +247,21 @@ onMounted(fetchMutualFunds)
 </script>
 
 <template>
-  <div class="mx-auto mt-4 max-w-5xl px-3 sm:px-4">
-    <div class="text-left">
-      <a href="/" class="underline">← Back to Portfolio</a>
+  <div class="w-full">
+    <div class="mx-auto mt-4 w-full max-w-5xl px-3 sm:px-4">
+      <div class="text-left">
+        <a href="/" class="underline">← Back to Portfolio</a>
+      </div>
+      <h1 class="mt-5 !text-5xl !leading-[0.95] font-bold tracking-tight sm:!text-6xl md:!text-7xl">
+        Smart Redemption
+      </h1>
+      <p class="mx-auto mt-3 max-w-3xl text-lg text-muted-foreground sm:text-2xl">
+        Optimize selling funds for lower exit load and tax amounts.
+      </p>
     </div>
-    <h1 class="mt-5 !text-5xl !leading-[0.95] font-bold tracking-tight sm:!text-6xl md:!text-7xl">
-      Smart Redemption
-    </h1>
-    <p class="mx-auto mt-3 max-w-3xl text-lg text-muted-foreground sm:text-2xl">
-      Optimize selling funds for lower exit load and tax amounts.
-    </p>
-  </div>
 
-  <div class="mx-auto mt-6 max-w-5xl px-3 pb-8 sm:px-4 md:pb-12">
-    <Card class="mx-auto">
+    <div class="mx-auto mt-6 w-full max-w-5xl px-3 pb-8 sm:px-4 md:pb-12">
+    <Card class="mx-auto w-full max-w-full">
       <CardHeader>
         <CardTitle class="text-center text-2xl sm:text-3xl">How much do you need?</CardTitle>
       </CardHeader>
@@ -364,7 +365,7 @@ onMounted(fetchMutualFunds)
         </Card>
       </div>
 
-      <Card v-if="hasFundsToSell">
+      <Card v-if="hasFundsToSell" class="w-full max-w-full overflow-hidden">
         <CardHeader>
           <CardTitle>Recommended Funds to Sell</CardTitle>
         </CardHeader>
@@ -397,6 +398,7 @@ onMounted(fetchMutualFunds)
           </Table>
         </CardContent>
       </Card>
+    </div>
     </div>
   </div>
 </template>
