@@ -4,14 +4,6 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table'
 
 type MutualFundOption = {
   name: string
@@ -365,37 +357,60 @@ onMounted(fetchMutualFunds)
         </Card>
       </div>
 
-      <Card v-if="hasFundsToSell" class="w-full max-w-full overflow-hidden">
+      <Card v-if="hasFundsToSell" class="w-full max-w-full">
         <CardHeader>
           <CardTitle>Recommended Funds to Sell</CardTitle>
         </CardHeader>
-        <CardContent class="px-0 sm:px-6">
-          <Table class="min-w-[760px]">
-            <TableHeader>
-              <TableRow>
-                <TableHead>Fund Name</TableHead>
-                <TableHead class="text-right">Units to Sell</TableHead>
-                <TableHead class="text-right">Total Value</TableHead>
-                <TableHead class="text-right">PnL</TableHead>
-                <TableHead class="text-right">Exit Load</TableHead>
-                <TableHead class="text-right">STCG</TableHead>
-                <TableHead class="text-right">LTCG</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              <TableRow v-for="fund in result?.funds" :key="fund.fundName">
-                <TableCell class="font-medium whitespace-normal">{{ fund.fundName }}</TableCell>
-                <TableCell class="text-right">{{ formatNumber(fund.unitsToSell) }}</TableCell>
-                <TableCell class="text-right">{{ formatCurrency(fund.totalValue) }}</TableCell>
-                <TableCell class="text-right">
-                  <span :class="amountClass(fund.pnl)">{{ formatCurrency(fund.pnl) }}</span>
-                </TableCell>
-                <TableCell class="text-right">{{ formatCurrency(fund.exitLoad) }}</TableCell>
-                <TableCell class="text-right">{{ formatCurrency(fund.stcgTax) }}</TableCell>
-                <TableCell class="text-right">{{ formatCurrency(fund.ltcgTax) }}</TableCell>
-              </TableRow>
-            </TableBody>
-          </Table>
+        <CardContent class="space-y-4">
+          <div class="grid gap-4 md:grid-cols-2">
+            <Card
+              v-for="fund in result?.funds"
+              :key="fund.fundName"
+              class="gap-4 border-slate-200 bg-slate-50/60 py-0"
+            >
+              <CardHeader class="gap-2 px-5 pt-5">
+                <CardDescription class="text-xs font-semibold uppercase tracking-[0.16em] text-slate-500">
+                  Recommended Fund
+                </CardDescription>
+                <div class="flex items-start justify-between gap-4">
+                  <CardTitle class="text-xl leading-tight sm:text-2xl">{{ fund.fundName }}</CardTitle>
+                  <div class="shrink-0 text-right">
+                    <div class="text-xs font-medium uppercase tracking-wide text-slate-500">Total Value</div>
+                    <div class="text-xl font-semibold sm:text-2xl">{{ formatCurrency(fund.totalValue) }}</div>
+                  </div>
+                </div>
+              </CardHeader>
+              <CardContent class="space-y-4 px-5 pb-5">
+                <div class="border-t border-slate-200"></div>
+
+                <div class="space-y-3">
+                  <div class="flex items-center justify-between gap-4 text-sm sm:text-base">
+                    <span class="text-muted-foreground">PnL</span>
+                    <span class="font-medium" :class="amountClass(fund.pnl)">{{ formatCurrency(fund.pnl) }}</span>
+                  </div>
+                  <div class="flex items-center justify-between gap-4 text-sm sm:text-base">
+                    <span class="text-muted-foreground">Exit Load</span>
+                    <span class="font-medium">{{ formatCurrency(fund.exitLoad) }}</span>
+                  </div>
+                  <div class="flex items-center justify-between gap-4 text-sm sm:text-base">
+                    <span class="text-muted-foreground">STCG</span>
+                    <span class="font-medium">{{ formatCurrency(fund.stcgTax) }}</span>
+                  </div>
+                  <div class="flex items-center justify-between gap-4 text-sm sm:text-base">
+                    <span class="text-muted-foreground">LTCG</span>
+                    <span class="font-medium">{{ formatCurrency(fund.ltcgTax) }}</span>
+                  </div>
+                </div>
+
+                <div class="border-t border-slate-200"></div>
+
+                <p class="text-sm text-muted-foreground sm:text-base">
+                  Sell <span class="font-semibold text-foreground">{{ formatNumber(fund.unitsToSell) }}</span> units
+                  from this fund.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
         </CardContent>
       </Card>
     </div>
