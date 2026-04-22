@@ -247,42 +247,46 @@ onMounted(fetchMutualFunds)
 </script>
 
 <template>
-  <div class="mx-auto mt-4 max-w-4xl px-4">
-    <a href="/" class="underline">← Back to Portfolio</a>
-    <h1 class="mt-4 text-2xl font-bold">Smart Redemption</h1>
-    <p class="mt-2 text-muted-foreground">
+  <div class="mx-auto mt-4 max-w-5xl px-3 sm:px-4">
+    <div class="text-left">
+      <a href="/" class="underline">← Back to Portfolio</a>
+    </div>
+    <h1 class="mt-5 !text-5xl !leading-[0.95] font-bold tracking-tight sm:!text-6xl md:!text-7xl">
+      Smart Redemption
+    </h1>
+    <p class="mx-auto mt-3 max-w-3xl text-lg text-muted-foreground sm:text-2xl">
       Optimize selling funds for lower exit load and tax amounts.
     </p>
   </div>
 
-  <div class="mx-auto mt-6 max-w-4xl px-4">
+  <div class="mx-auto mt-6 max-w-5xl px-3 pb-8 sm:px-4 md:pb-12">
     <Card class="mx-auto">
       <CardHeader>
-        <CardTitle>How much do you need?</CardTitle>
+        <CardTitle class="text-center text-2xl sm:text-3xl">How much do you need?</CardTitle>
       </CardHeader>
-      <CardContent class="space-y-5">
+      <CardContent class="space-y-5 px-4 sm:px-6">
         <div class="space-y-4">
-          <div class="flex items-center rounded-[1.8rem] border-4 border-slate-200 bg-slate-50 px-8 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
-            <span class="mr-6 text-4xl font-medium text-slate-400">₹</span>
+          <div class="flex min-w-0 items-center rounded-[1.8rem] border-4 border-slate-200 bg-slate-50 px-4 py-5 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)] sm:px-8 sm:py-6">
+            <span class="mr-3 text-4xl font-medium text-slate-400 sm:mr-6 sm:text-5xl">₹</span>
             <Input
               id="redemption-amount"
               v-model="formattedRedemptionAmount"
               type="text"
               inputmode="numeric"
               placeholder="5,00,000"
-              class="h-auto border-0 bg-transparent px-0 py-0 text-5xl font-semibold tracking-tight !text-slate-900 shadow-none focus-visible:ring-0 focus-visible:border-transparent"
+              class="h-auto min-w-0 flex-1 border-0 bg-transparent px-0 py-0 text-[clamp(2.5rem,10vw,4.75rem)] font-semibold tracking-tight !text-slate-900 shadow-none focus-visible:border-transparent focus-visible:ring-0"
             />
           </div>
 
-          <div class="grid grid-cols-3 gap-4">
+          <div class="grid grid-cols-3 gap-3 sm:gap-4">
             <button
               v-for="amount in amountPresets"
               :key="amount"
               type="button"
-              class="rounded-2xl border px-4 py-4 text-2xl font-medium transition-colors"
+              class="rounded-xl border px-3 py-3 text-lg font-semibold transition-colors sm:rounded-2xl sm:px-4 sm:py-4 sm:text-2xl"
               :class="parsedRedemptionAmount === amount
-                ? 'border-emerald-500 bg-emerald-100 text-emerald-700'
-                : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100'"
+                ? '!border-emerald-500 !bg-emerald-100 !text-emerald-700'
+                : '!border-slate-200 !bg-slate-50 !text-slate-600 hover:!border-slate-300 hover:!bg-slate-100'"
               @click="setRedemptionAmount(amount)"
             >
               {{ formatAmountPreset(amount) }}
@@ -309,7 +313,7 @@ onMounted(fetchMutualFunds)
                 v-for="fund in filteredFunds"
                 :key="fund.symbol"
                 type="button"
-                class="flex w-full items-center justify-between px-3 py-2 text-left text-sm hover:bg-muted"
+                class="flex w-full items-center justify-between !border-0 !bg-white px-3 py-2 text-left text-sm shadow-none hover:!bg-slate-100"
                 @click="addFundToAvoid(fund)"
               >
                 <span class="pr-4">{{ fund.name }}</span>
@@ -329,17 +333,17 @@ onMounted(fetchMutualFunds)
               v-for="fund in selectedFunds"
               :key="fund.symbol"
               type="button"
-              class="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-sm"
+              class="inline-flex max-w-full items-center gap-2 rounded-full !border-slate-300 !bg-white px-3 py-2 text-left text-sm text-slate-800 shadow-none hover:!bg-slate-50"
               @click="removeFundToAvoid(fund.symbol)"
             >
-              <span>{{ fund.name }}</span>
+              <span class="min-w-0 truncate">{{ fund.name }}</span>
               <span class="text-muted-foreground">×</span>
             </button>
           </div>
         </div>
 
         <Button
-          class="w-full !border-transparent !bg-primary !text-primary-foreground hover:!bg-primary/90"
+          class="w-full !border-transparent !bg-primary !text-lg !text-primary-foreground hover:!bg-primary/90 sm:!text-xl"
           :disabled="!canSubmit || loadingFunds"
           @click="submitRedemption"
         >
@@ -354,8 +358,8 @@ onMounted(fetchMutualFunds)
       <div v-if="result" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card v-for="card in summaryCards" :key="card.label">
           <CardHeader class="pb-2">
-            <CardDescription>{{ card.label }}</CardDescription>
-            <CardTitle class="text-2xl">{{ formatCurrency(card.value) }}</CardTitle>
+            <CardDescription class="text-base sm:text-lg">{{ card.label }}</CardDescription>
+            <CardTitle class="break-words text-3xl sm:text-4xl">{{ formatCurrency(card.value) }}</CardTitle>
           </CardHeader>
         </Card>
       </div>
@@ -364,8 +368,8 @@ onMounted(fetchMutualFunds)
         <CardHeader>
           <CardTitle>Recommended Funds to Sell</CardTitle>
         </CardHeader>
-        <CardContent>
-          <Table>
+        <CardContent class="px-0 sm:px-6">
+          <Table class="min-w-[760px]">
             <TableHeader>
               <TableRow>
                 <TableHead>Fund Name</TableHead>
