@@ -348,12 +348,23 @@ onMounted(fetchMutualFunds)
     </Card>
 
     <div class="mt-6 space-y-6">
-      <div v-if="result" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-        <Card v-for="card in summaryCards" :key="card.label">
-          <CardHeader class="pb-2">
-            <CardDescription class="text-base sm:text-lg">{{ card.label }}</CardDescription>
-            <CardTitle class="break-words text-3xl sm:text-4xl">{{ formatCurrency(card.value) }}</CardTitle>
+      <div v-if="result">
+        <Card>
+          <CardHeader>
+            <CardTitle>Estimated Amount Breakdown</CardTitle>
           </CardHeader>
+          <CardContent class="space-y-4">
+            <div
+              v-for="card in summaryCards"
+              :key="card.label"
+              class="flex items-center justify-between gap-4 border-b border-slate-200 pb-4 last:border-b-0 last:pb-0"
+            >
+              <CardDescription class="text-base sm:text-lg">{{ card.label }}</CardDescription>
+              <div class="text-right text-xl font-semibold sm:text-2xl">
+                {{ formatCurrency(card.value) }}
+              </div>
+            </div>
+          </CardContent>
         </Card>
       </div>
 
