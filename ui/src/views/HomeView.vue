@@ -53,12 +53,17 @@ const holdings = computed<HoldingItem[]>(() => {
 
   for (const item of input.value) {
     if (item.name === 'equity') {
+      const equityRebalanceAmount = (totalAmount.value * equityTarget.value) / 100 - item.amount
+      if (equityRebalanceAmount > 0) {
+        localStorage.setItem('equityCashAmount', String(Math.round(equityRebalanceAmount)))
+      }
+
       result.push({
         name: 'equity',
         label: `Equity - ${equityTarget.value}%`,
         currentAmount: item.amount,
         percent: (item.amount / totalAmount.value) * 100,
-        rebalanceAmount: (totalAmount.value * equityTarget.value) / 100 - item.amount,
+        rebalanceAmount: equityRebalanceAmount,
         linkTo: '/equity',
       })
     } else if (item.name === 'debt') {
