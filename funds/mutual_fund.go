@@ -96,6 +96,7 @@ type RedemptionResponse struct {
 	TotalValue    float64     `json:"total_value"`
 	TotalExitLoad float64     `json:"total_exit_load"`
 	TotalTax      float64     `json:"total_tax"`
+	TotalPnL      float64     `json:"total_pnl"`
 	ActualValue   float64     `json:"actual_value"`
 }
 
@@ -420,6 +421,7 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 		response.TotalValue += f.TotalValue
 		response.TotalExitLoad += f.ExitLoad
 		response.TotalTax += f.STCGTax + f.LTCGTax
+		response.TotalPnL += f.PnL
 	}
 
 	sortByValueDesc := func(a, b Candidate) int {
