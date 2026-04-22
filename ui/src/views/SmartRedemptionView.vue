@@ -222,28 +222,24 @@ onMounted(fetchMutualFunds)
     <a href="/" class="underline">← Back to Portfolio</a>
     <h1 class="mt-4 text-2xl font-bold">Smart Redemption</h1>
     <p class="mt-2 text-muted-foreground">
-      Estimate which equity mutual funds to redeem while excluding specific funds by name.
+      Optimize selling funds for lower exit load and tax amounts.
     </p>
   </div>
 
   <div class="max-w-6xl mx-auto mt-6 px-4 grid gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
     <Card class="h-fit">
       <CardHeader>
-        <CardTitle>Redemption Inputs</CardTitle>
-        <CardDescription>
-          Enter the target redemption amount and optionally exclude funds from consideration.
-        </CardDescription>
+        <CardTitle>How much do you need?</CardTitle>
       </CardHeader>
       <CardContent class="space-y-5">
         <div class="space-y-2">
-          <Label for="redemption-amount">Redemption amount</Label>
+          <Label for="redemption-amount">Amount</Label>
           <Input
             id="redemption-amount"
             v-model="redemptionAmount"
             type="number"
             min="0"
             step="1000"
-            placeholder="4500000"
           />
         </div>
 
@@ -278,7 +274,7 @@ onMounted(fetchMutualFunds)
           <p v-if="loadingFunds" class="text-sm text-muted-foreground">Loading funds...</p>
           <p v-else-if="fundsError" class="text-sm text-red-600">{{ fundsError }}</p>
           <p v-else class="text-sm text-muted-foreground">
-            Start typing to see matching fund names. We will submit their symbols to the API.
+            Start typing to see matching fund names. 
           </p>
 
           <div v-if="selectedFunds.length > 0" class="flex flex-wrap gap-2 pt-2">
@@ -295,8 +291,12 @@ onMounted(fetchMutualFunds)
           </div>
         </div>
 
-        <Button class="w-full" :disabled="!canSubmit || loadingFunds" @click="submitRedemption">
-          {{ submitting ? 'Calculating...' : 'Calculate smart redemption' }}
+        <Button
+          class="w-full !border-transparent !bg-primary !text-primary-foreground hover:!bg-primary/90"
+          :disabled="!canSubmit || loadingFunds"
+          @click="submitRedemption"
+        >
+          {{ submitting ? 'Calculating...' : 'Show Funds' }}
         </Button>
 
         <p v-if="submitError" class="text-sm text-red-600">{{ submitError }}</p>
@@ -315,10 +315,7 @@ onMounted(fetchMutualFunds)
 
       <Card>
         <CardHeader>
-          <CardTitle>Funds to Sell</CardTitle>
-          <CardDescription>
-            Review the suggested redemptions, including taxes and exit load impact.
-          </CardDescription>
+          <CardTitle>Recommended Funds to Sell</CardTitle>
         </CardHeader>
         <CardContent>
           <div v-if="result">
@@ -355,7 +352,7 @@ onMounted(fetchMutualFunds)
             </Table>
           </div>
           <div v-else class="py-10 text-center text-muted-foreground">
-            Enter a redemption amount and run the calculation to see the recommendation.
+            Enter redemption amount.
           </div>
         </CardContent>
       </Card>

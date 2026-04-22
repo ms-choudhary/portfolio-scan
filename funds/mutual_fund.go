@@ -332,7 +332,7 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 		return RedemptionResponse{}, err
 	}
 
-	log.Printf("received redemption request")
+	log.Printf("===== received redemption request, amount: %f, funds to avoid: %v", req.Amount, req.FundsToAvoid)
 
 	allLots := []Lot{}
 	for _, f := range funds {
@@ -366,19 +366,31 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 			continue
 		}
 
+		prevCandidateValue := 0.0
 		if candidate, exists := fundsToSell[lot.Fund.Symbol]; exists {
 			if lot.Number < candidate.LotNumber {
 				continue
 			} else {
-				remaining += candidate.UnitsToSell * candidate.Fund.LTP
+				prevCandidateValue = candidate.UnitsToSell * candidate.Fund.LTP
+				remaining += prevCandidateValue
 			}
 		}
 
+		prevLotsUnits := lot.TotalQty - lot.Qty
+		lotUnitsShare := lot.Qty
+
 		unitsToSell := lot.TotalQty
 		if remaining < lot.TotalQty*lot.Fund.LTP {
-			unitsToSell = remaining / lot.Fund.LTP
+			if remaining < prevLotsUnits*lot.Fund.LTP {
+				log.Printf("invalid: cannot satisfy remaining just by selling this lot (age: %d) of fund %s", lot.Age, lot.Fund.Name[:10])
+				remaining -= prevCandidateValue
+				continue
+			}
+
+			lotUnitsShare := (remaining - prevLotsUnits*lot.Fund.LTP) / lot.Fund.LTP
+			unitsToSell = prevLotsUnits + lotUnitsShare
 		} else if unitsToSell*lot.Fund.LTP < 5000 {
-			log.Printf("skipping %d lot of fund %s as val %f less than 5k", lot.Number, lot.Fund.Name, unitsToSell*lot.Fund.LTP)
+			log.Printf("skipping %d lot of fund %s as val %f less than 5k", lot.Number, lot.Fund.Name[:10], unitsToSell*lot.Fund.LTP)
 			continue
 		}
 
@@ -388,14 +400,14 @@ func SmartRedemption(req RedemptionRequest) (RedemptionResponse, error) {
 			LotNumber:   lot.Number,
 			UnitsToSell: unitsToSell,
 			TotalValue:  unitsToSell * lot.Fund.LTP,
-			PnL:         lot.TotalPnL - lot.PnL + calculatePnL(lot, unitsToSell),
-			ExitLoad:    lot.TotalExitLoad - lot.ExitLoad + calculateExitLoad(lot, unitsToSell),
-			STCGTax:     lot.TotalSTCGTax - lot.STCGTax + calculateSTCGTax(lot.Age, calculatePnL(lot, unitsToSell)),
-			LTCGTax:     lot.TotalLTCGTax - lot.LTCGTax + calculateLTCGTax(lot.Age, calculatePnL(lot, unitsToSell)),
+			PnL:         lot.TotalPnL - lot.PnL + calculatePnL(lot, lotUnitsShare),
+			ExitLoad:    lot.TotalExitLoad - lot.ExitLoad + calculateExitLoad(lot, lotUnitsShare),
+			STCGTax:     lot.TotalSTCGTax - lot.STCGTax + calculateSTCGTax(lot.Age, calculatePnL(lot, lotUnitsShare)),
+			LTCGTax:     lot.TotalLTCGTax - lot.LTCGTax + calculateLTCGTax(lot.Age, calculatePnL(lot, lotUnitsShare)),
 		}
 
 		remaining -= unitsToSell * lot.Fund.LTP
-		log.Printf("sell %d lot of %f units of fund %s, exit: %f, stcg: %f, ltcg: %f, | remaining: %f\n", lot.Number, unitsToSell, lot.Fund.Name, lot.TotalExitLoad, lot.TotalSTCGTax, lot.TotalLTCGTax, remaining)
+		log.Printf("sell %f units of fund %s lotAge %d | pnl: %f | exit: %f | stcg: %f | ltcg: %f | remaining: %f\n", unitsToSell, lot.Fund.Name[:10], lot.Age, lot.TotalPnL, lot.TotalExitLoad, lot.TotalSTCGTax, lot.TotalLTCGTax, remaining)
 	}
 
 	if i == len(allLots) {
