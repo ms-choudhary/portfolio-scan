@@ -69,6 +69,7 @@ const loadingFunds = ref(true)
 const submitting = ref(false)
 const fundsError = ref('')
 const submitError = ref('')
+const amountPresets = [500000, 1000000, 1500000]
 
 const formatCurrency = (value: number) =>
   `₹${value.toLocaleString('en-IN', { maximumFractionDigits: 0 })}`
@@ -76,11 +77,30 @@ const formatCurrency = (value: number) =>
 const formatNumber = (value: number, decimals = 3) =>
   value.toLocaleString('en-IN', { minimumFractionDigits: decimals, maximumFractionDigits: decimals })
 
+const formatAmountValue = (value: string) => {
+  if (!value) {
+    return ''
+  }
+
+  return Number(value).toLocaleString('en-IN')
+}
+
+const formatAmountPreset = (value: number) => `₹${value / 100000}L`
+
 const amountClass = (value: number) => {
   if (value > 0) return 'text-green-700'
   if (value < 0) return 'text-red-700'
   return 'text-foreground'
 }
+
+const parsedRedemptionAmount = computed(() => Number(redemptionAmount.value || '0'))
+
+const formattedRedemptionAmount = computed({
+  get: () => formatAmountValue(redemptionAmount.value),
+  set: (value: string) => {
+    redemptionAmount.value = value.replace(/\D/g, '')
+  },
+})
 
 const filteredFunds = computed(() => {
   const query = avoidQuery.value.trim().toLowerCase()
@@ -114,7 +134,8 @@ const summaryCards = computed(() => {
   ]
 })
 
-const canSubmit = computed(() => Number(redemptionAmount.value) > 0 && !submitting.value)
+const canSubmit = computed(() => parsedRedemptionAmount.value > 0 && !submitting.value)
+const hasFundsToSell = computed(() => Boolean(result.value && result.value.funds.length > 0))
 
 const normalizeFundOption = (fund: ApiMutualFund): MutualFundOption => ({
   name: fund.Name ?? 'Unnamed Fund',
@@ -183,6 +204,10 @@ const addFirstSuggestion = () => {
   addFundToAvoid(filteredFunds.value[0])
 }
 
+const setRedemptionAmount = (value: number) => {
+  redemptionAmount.value = value.toString()
+}
+
 const submitRedemption = async () => {
   try {
     submitting.value = true
@@ -195,7 +220,7 @@ const submitRedemption = async () => {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        amount: Number(redemptionAmount.value),
+        amount: parsedRedemptionAmount.value,
         funds_to_avoid: selectedFunds.value.map((fund) => fund.symbol),
       }),
     })
@@ -232,15 +257,33 @@ onMounted(fetchMutualFunds)
         <CardTitle>How much do you need?</CardTitle>
       </CardHeader>
       <CardContent class="space-y-5">
-        <div class="space-y-2">
-          <Label for="redemption-amount">Amount</Label>
-          <Input
-            id="redemption-amount"
-            v-model="redemptionAmount"
-            type="number"
-            min="0"
-            step="1000"
-          />
+        <div class="space-y-4">
+          <div class="flex items-center rounded-[1.8rem] border-4 border-slate-200 bg-slate-50 px-8 py-6 shadow-[inset_0_1px_0_rgba(255,255,255,0.8)]">
+            <span class="mr-6 text-4xl font-medium text-slate-400">₹</span>
+            <Input
+              id="redemption-amount"
+              v-model="formattedRedemptionAmount"
+              type="text"
+              inputmode="numeric"
+              placeholder="5,00,000"
+              class="h-auto border-0 bg-transparent px-0 py-0 text-5xl font-semibold tracking-tight !text-slate-900 shadow-none focus-visible:ring-0 focus-visible:border-transparent"
+            />
+          </div>
+
+          <div class="grid grid-cols-3 gap-4">
+            <button
+              v-for="amount in amountPresets"
+              :key="amount"
+              type="button"
+              class="rounded-2xl border px-4 py-4 text-2xl font-medium transition-colors"
+              :class="parsedRedemptionAmount === amount
+                ? 'border-emerald-500 bg-emerald-100 text-emerald-700'
+                : 'border-slate-200 bg-slate-50 text-slate-600 hover:border-slate-300 hover:bg-slate-100'"
+              @click="setRedemptionAmount(amount)"
+            >
+              {{ formatAmountPreset(amount) }}
+            </button>
+          </div>
         </div>
 
         <div class="space-y-2">
@@ -313,47 +356,37 @@ onMounted(fetchMutualFunds)
         </Card>
       </div>
 
-      <Card>
+      <Card v-if="hasFundsToSell">
         <CardHeader>
           <CardTitle>Recommended Funds to Sell</CardTitle>
         </CardHeader>
         <CardContent>
-          <div v-if="result">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Fund Name</TableHead>
-                  <TableHead class="text-right">Units to Sell</TableHead>
-                  <TableHead class="text-right">Total Value</TableHead>
-                  <TableHead class="text-right">PnL</TableHead>
-                  <TableHead class="text-right">Exit Load</TableHead>
-                  <TableHead class="text-right">STCG</TableHead>
-                  <TableHead class="text-right">LTCG</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                <TableRow v-for="fund in result.funds" :key="fund.fundName">
-                  <TableCell class="font-medium whitespace-normal">{{ fund.fundName }}</TableCell>
-                  <TableCell class="text-right">{{ formatNumber(fund.unitsToSell) }}</TableCell>
-                  <TableCell class="text-right">{{ formatCurrency(fund.totalValue) }}</TableCell>
-                  <TableCell class="text-right">
-                    <span :class="amountClass(fund.pnl)">{{ formatCurrency(fund.pnl) }}</span>
-                  </TableCell>
-                  <TableCell class="text-right">{{ formatCurrency(fund.exitLoad) }}</TableCell>
-                  <TableCell class="text-right">{{ formatCurrency(fund.stcgTax) }}</TableCell>
-                  <TableCell class="text-right">{{ formatCurrency(fund.ltcgTax) }}</TableCell>
-                </TableRow>
-                <TableRow v-if="result.funds.length === 0">
-                  <TableCell :colspan="7" class="py-4 text-center text-muted-foreground">
-                    No funds returned for the requested redemption.
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </div>
-          <div v-else class="py-10 text-center text-muted-foreground">
-            Enter redemption amount.
-          </div>
+          <Table>
+            <TableHeader>
+              <TableRow>
+                <TableHead>Fund Name</TableHead>
+                <TableHead class="text-right">Units to Sell</TableHead>
+                <TableHead class="text-right">Total Value</TableHead>
+                <TableHead class="text-right">PnL</TableHead>
+                <TableHead class="text-right">Exit Load</TableHead>
+                <TableHead class="text-right">STCG</TableHead>
+                <TableHead class="text-right">LTCG</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              <TableRow v-for="fund in result?.funds" :key="fund.fundName">
+                <TableCell class="font-medium whitespace-normal">{{ fund.fundName }}</TableCell>
+                <TableCell class="text-right">{{ formatNumber(fund.unitsToSell) }}</TableCell>
+                <TableCell class="text-right">{{ formatCurrency(fund.totalValue) }}</TableCell>
+                <TableCell class="text-right">
+                  <span :class="amountClass(fund.pnl)">{{ formatCurrency(fund.pnl) }}</span>
+                </TableCell>
+                <TableCell class="text-right">{{ formatCurrency(fund.exitLoad) }}</TableCell>
+                <TableCell class="text-right">{{ formatCurrency(fund.stcgTax) }}</TableCell>
+                <TableCell class="text-right">{{ formatCurrency(fund.ltcgTax) }}</TableCell>
+              </TableRow>
+            </TableBody>
+          </Table>
         </CardContent>
       </Card>
     </div>
