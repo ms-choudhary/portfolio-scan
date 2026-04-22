@@ -33,6 +33,7 @@ type RedemptionResponse = {
   totalValue: number
   totalExitLoad: number
   totalTax: number
+  totalPnL: number
   actualValue: number
 }
 
@@ -56,6 +57,7 @@ type ApiRedemptionResponse = {
   total_value?: number
   total_exit_load?: number
   total_tax?: number
+  total_pnl?: number
   actual_value?: number
 }
 
@@ -128,6 +130,7 @@ const summaryCards = computed(() => {
 
   return [
     { label: 'Total Value', value: result.value.totalValue },
+    { label: 'Total PnL', value: result.value.totalPnL },
     { label: 'Total Exit Load', value: result.value.totalExitLoad },
     { label: 'Total Tax', value: result.value.totalTax },
     { label: 'Actual Value', value: result.value.actualValue },
@@ -157,6 +160,7 @@ const normalizeRedemptionResponse = (payload: ApiRedemptionResponse): Redemption
   totalValue: payload.total_value ?? 0,
   totalExitLoad: payload.total_exit_load ?? 0,
   totalTax: payload.total_tax ?? 0,
+  totalPnL: payload.total_pnl ?? 0,
   actualValue: payload.actual_value ?? 0,
 })
 
@@ -243,7 +247,7 @@ onMounted(fetchMutualFunds)
 </script>
 
 <template>
-  <div class="max-w-6xl mx-auto mt-4 px-4">
+  <div class="mx-auto mt-4 max-w-4xl px-4">
     <a href="/" class="underline">← Back to Portfolio</a>
     <h1 class="mt-4 text-2xl font-bold">Smart Redemption</h1>
     <p class="mt-2 text-muted-foreground">
@@ -251,8 +255,8 @@ onMounted(fetchMutualFunds)
     </p>
   </div>
 
-  <div class="max-w-6xl mx-auto mt-6 px-4 grid gap-6 lg:grid-cols-[22rem_minmax(0,1fr)]">
-    <Card class="h-fit">
+  <div class="mx-auto mt-6 max-w-4xl px-4">
+    <Card class="mx-auto">
       <CardHeader>
         <CardTitle>How much do you need?</CardTitle>
       </CardHeader>
@@ -346,8 +350,8 @@ onMounted(fetchMutualFunds)
       </CardContent>
     </Card>
 
-    <div class="space-y-6">
-      <div v-if="result" class="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+    <div class="mt-6 space-y-6">
+      <div v-if="result" class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         <Card v-for="card in summaryCards" :key="card.label">
           <CardHeader class="pb-2">
             <CardDescription>{{ card.label }}</CardDescription>
