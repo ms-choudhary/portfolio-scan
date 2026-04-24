@@ -8,6 +8,7 @@ import (
 	"math"
 	"os"
 	"slices"
+	"strings"
 	"time"
 
 	"portfolio-scan/nav"
@@ -187,6 +188,31 @@ func loadTxns(fileName string) ([]Transaction, error) {
 	return txns.Transactions, nil
 }
 
+func getAllTransactions() ([]Transaction, error) {
+	dir, err := os.ReadDir(".")
+	if err != nil {
+		return []Transaction{}, err
+	}
+
+	var result struct {
+		Transactions []Transaction
+	}
+	result.Transactions = []Transaction{}
+
+	for _, entry := range dir {
+		if !entry.IsDir() && strings.HasPrefix(entry.Name(), "transactions") && strings.HasSuffix(entry.Name(), ".json") {
+			txns, err := loadTxns(entry.Name())
+			if err != nil {
+				return []Transaction{}, err
+			}
+
+			result.Transactions = append(result.Transactions, txns...)
+		}
+	}
+
+	return result.Transactions, nil
+}
+
 func daysFromToday(date time.Time) int {
 	d := time.Now().Sub(date)
 	if d < 0 {
@@ -258,7 +284,7 @@ func (f *MutualFund) removeRedeemedLots(units float64) {
 }
 
 func GetMutualFunds() ([]MutualFund, error) {
-	transactions, err := loadTxns("transactions.json")
+	transactions, err := getAllTransactions()
 	if err != nil {
 		return []MutualFund{}, err
 	}

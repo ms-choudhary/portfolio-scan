@@ -15,7 +15,7 @@ ui/dist-ssr
 portfolio-scan
 .portfolio*
 
-./transactions*
-./nav.json
+transactions*
+nav.json
 
 smart-redemption/*.json
