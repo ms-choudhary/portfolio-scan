@@ -8,6 +8,7 @@ import (
 	"io/fs"
 	"log"
 	"net/http"
+	"net/url"
 	"os"
 	"strconv"
 	"strings"
@@ -17,9 +18,13 @@ import (
 )
 
 const (
-	Equity = "equity"
-	Debt   = "debt"
-	Gold   = "gold"
+	Equity            = "equity"
+	Debt              = "debt"
+	Gold              = "gold"
+	LargeCapEquity    = "large cap"
+	MidCapEquity      = "mid cap"
+	LargeMidCapEquity = "large mid cap"
+	SmallCapEquity    = "small cap"
 )
 
 type Fund struct {
@@ -219,7 +224,77 @@ func handlePortfolio(w http.ResponseWriter, req *http.Request) {
 	}
 
 	w.Header().Set("Access-Control-Allow-Origin", "*")
-	fmt.Fprintf(w, string(data))
+	fmt.Fprint(w, string(data))
+
+	log.Printf("200 ok: %v", string(data))
+}
+
+func classifyEquityCategory(name string) string {
+	upper := strings.ToUpper(name)
+
+	if strings.Contains(upper, "SMALL CAP") {
+		return SmallCapEquity
+	}
+
+	if strings.Contains(upper, "MID CAP") || strings.Contains(upper, "MIDCAP") {
+		if strings.Contains(upper, "LARGE") {
+			return LargeMidCapEquity
+		}
+		return MidCapEquity
+	}
+
+	return LargeCapEquity
+}
+
+func handleEquityCategories(w http.ResponseWriter, req *http.Request) {
+	p, err := loadPortfolios()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	if err := p.updateCurrentPrice(); err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	allocations := []Allocation{
+		{Name: LargeCapEquity, Amount: 0.0},
+		{Name: MidCapEquity, Amount: 0.0},
+		{Name: SmallCapEquity, Amount: 0.0},
+	}
+
+	for _, f := range p.Funds {
+		if f.Class != Equity {
+			continue
+		}
+
+		if strings.Contains(f.Name, "NPS") {
+			continue
+		}
+
+		amount := f.Quantity * f.Price
+		switch classifyEquityCategory(f.Name) {
+		case LargeCapEquity:
+			allocations[0].Amount += amount
+		case MidCapEquity:
+			allocations[1].Amount += amount
+		case SmallCapEquity:
+			allocations[2].Amount += amount
+		case LargeMidCapEquity:
+			allocations[0].Amount += amount / 2
+			allocations[1].Amount += amount / 2
+		}
+	}
+
+	data, err := json.Marshal(allocations)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
 
 	log.Printf("200 ok: %v", string(data))
 }
@@ -305,6 +380,7 @@ func main() {
 	frontendHandler := http.FileServer(http.FS(distFS))
 
 	http.HandleFunc("/api/portfolio", handlePortfolio)
+	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
 	http.HandleFunc("/login/", handleLogin)
 	http.HandleFunc("/auth/", handleAuthRedirect)
 
@@ -315,6 +391,25 @@ func main() {
 		if strings.HasPrefix(r.URL.Path, "/login") || strings.HasPrefix(r.URL.Path, "/return") {
 			return
 		}
+
+		path := strings.TrimPrefix(r.URL.Path, "/")
+		if path == "" {
+			path = "index.html"
+		}
+
+		// serve index.html for any path that does not exists
+		// and let vue handle the routing
+		_, err := distFS.Open(path)
+		if err != nil {
+			r2 := new(http.Request)
+			*r2 = *r
+			r2.URL = new(url.URL)
+			*r2.URL = *r.URL
+			r2.URL.Path = "/"
+			frontendHandler.ServeHTTP(w, r2)
+			return
+		}
+
 		frontendHandler.ServeHTTP(w, r)
 	})
 
