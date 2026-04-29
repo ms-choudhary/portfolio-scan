@@ -53,12 +53,17 @@ const holdings = computed<HoldingItem[]>(() => {
 
   for (const item of input.value) {
     if (item.name === 'equity') {
+      const equityRebalanceAmount = (totalAmount.value * equityTarget.value) / 100 - item.amount
+      if (equityRebalanceAmount > 0) {
+        localStorage.setItem('equityCashAmount', String(Math.round(equityRebalanceAmount)))
+      }
+
       result.push({
         name: 'equity',
         label: `Equity - ${equityTarget.value}%`,
         currentAmount: item.amount,
         percent: (item.amount / totalAmount.value) * 100,
-        rebalanceAmount: (totalAmount.value * equityTarget.value) / 100 - item.amount,
+        rebalanceAmount: equityRebalanceAmount,
         linkTo: '/equity',
       })
     } else if (item.name === 'debt') {
@@ -112,6 +117,14 @@ const updateCashAmount = (value: string) => {
 </script>
 
 <template>
+  <div class="max-w-2xl mx-auto mt-4 px-4">
+    <a href="/mutual-funds" class="underline">Mutual Funds</a>
+    <span class="mx-2 text-muted-foreground">|</span>
+    <a href="/recurring-funds" class="underline">Recurring Funds</a>
+    <span class="mx-2 text-muted-foreground">|</span>
+    <a href="/smart-redemption" class="underline">Smart Redemption</a>
+  </div>
+
   <div v-if="loading" class="text-center mt-8">Loading...</div>
   <div v-else-if="error" class="text-center mt-8 text-red-600">{{ error }}</div>
   <AllocationDashboard
