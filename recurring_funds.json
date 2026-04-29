@@ -5,8 +5,8 @@
       "sub_category": "pf",
       "symbol": "pf",
       "name": "PF",
-      "base_amount": 674224.0,
-      "start_from": "02/2026",
+      "base_amount": 844600.0,
+      "start_from": "04/2026",
       "monthly_amount": 56792.0
     },
     {
@@ -14,8 +14,8 @@
       "sub_category": "large mid cap",
       "symbol": "nps",
       "name": "NPS",
-      "base_amount": 505590.0,
-      "start_from": "02/2026",
+      "base_amount": 537549.0,
+      "start_from": "04/2026",
       "monthly_amount": 24041.0
     }
   ]
