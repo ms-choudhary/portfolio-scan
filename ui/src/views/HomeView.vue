@@ -1,15 +1,24 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import AllocationDashboard, { type HoldingItem } from '@/components/AllocationDashboard.vue'
 
-const cashAmount = ref('')
+type EquityTargets = {
+  large_cap: number
+  mid_cap: number
+  small_cap: number
+}
+
 const input = ref<Array<{ name: string; amount: number }>>([])
 const equityTarget = ref(70)
 const debtTarget = ref(20)
 const goldTarget = ref(10)
+const equitySubTargets = ref<EquityTargets>({ large_cap: 50, mid_cap: 30, small_cap: 20 })
 
 const loading = ref(true)
 const error = ref('')
+const savingTargets = ref(false)
+const targetsSaved = ref(false)
+const targetsError = ref('')
 
 const fetchPortfolio = async () => {
   try {
@@ -27,43 +36,74 @@ const fetchPortfolio = async () => {
   }
 }
 
+const fetchTargets = async () => {
+  try {
+    const response = await fetch('/api/target_allocations')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = (await response.json()) as {
+      asset: { equity: number; debt: number; gold: number }
+      equity: EquityTargets
+    }
+    equityTarget.value = data.asset.equity
+    debtTarget.value = data.asset.debt
+    goldTarget.value = data.asset.gold
+    equitySubTargets.value = data.equity
+  } catch (e) {
+    targetsError.value = `Failed to load targets: ${e instanceof Error ? e.message : 'Unknown error'}`
+  }
+}
+
+const saveTargets = async () => {
+  try {
+    savingTargets.value = true
+    targetsSaved.value = false
+    targetsError.value = ''
+    const response = await fetch('/api/target_allocations/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        asset: {
+          equity: equityTarget.value,
+          debt: debtTarget.value,
+          gold: goldTarget.value,
+        },
+        equity: equitySubTargets.value,
+      }),
+    })
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(text || `HTTP error! status: ${response.status}`)
+    }
+    targetsSaved.value = true
+  } catch (e) {
+    targetsError.value = `Failed to save targets: ${e instanceof Error ? e.message : 'Unknown error'}`
+  } finally {
+    savingTargets.value = false
+  }
+}
+
 onMounted(() => {
-  cashAmount.value = localStorage.getItem('portfolioCashAmount') ?? ''
-  equityTarget.value = Number(localStorage.getItem('equityTarget') ?? '70')
-  debtTarget.value = Number(localStorage.getItem('debtTarget') ?? '20')
-  goldTarget.value = Number(localStorage.getItem('goldTarget') ?? '10')
+  fetchTargets()
   fetchPortfolio()
 })
 
-watch(cashAmount, (value) => localStorage.setItem('portfolioCashAmount', value))
-watch(equityTarget, (value) => localStorage.setItem('equityTarget', value.toString()))
-watch(debtTarget, (value) => localStorage.setItem('debtTarget', value.toString()))
-watch(goldTarget, (value) => localStorage.setItem('goldTarget', value.toString()))
-
 const totalTargetPercent = computed(() => equityTarget.value + debtTarget.value + goldTarget.value)
 
-const totalAmount = computed(() => {
-  const portfolioTotal = input.value.reduce((sum, item) => sum + item.amount, 0)
-  const cash = parseFloat(cashAmount.value) || 0
-  return portfolioTotal + cash
-})
+const totalAmount = computed(() => input.value.reduce((sum, item) => sum + item.amount, 0))
 
 const holdings = computed<HoldingItem[]>(() => {
   const result: HoldingItem[] = []
 
   for (const item of input.value) {
     if (item.name === 'equity') {
-      const equityRebalanceAmount = (totalAmount.value * equityTarget.value) / 100 - item.amount
-      if (equityRebalanceAmount > 0) {
-        localStorage.setItem('equityCashAmount', String(Math.round(equityRebalanceAmount)))
-      }
-
       result.push({
         name: 'equity',
         label: `Equity - ${equityTarget.value}%`,
         currentAmount: item.amount,
         percent: (item.amount / totalAmount.value) * 100,
-        rebalanceAmount: equityRebalanceAmount,
+        rebalanceAmount: (totalAmount.value * equityTarget.value) / 100 - item.amount,
         linkTo: '/equity',
       })
     } else if (item.name === 'debt') {
@@ -85,17 +125,6 @@ const holdings = computed<HoldingItem[]>(() => {
     }
   }
 
-  const cash = parseFloat(cashAmount.value) || 0
-  if (cash > 0) {
-    result.push({
-      name: 'cash',
-      label: 'Cash - 0%',
-      currentAmount: cash,
-      percent: (cash / totalAmount.value) * 100,
-      rebalanceAmount: -cash,
-    })
-  }
-
   return result
 })
 
@@ -106,13 +135,11 @@ const targets = computed(() => [
 ])
 
 const updateTarget = ({ key, value }: { key: string; value: number }) => {
+  targetsSaved.value = false
   if (key === 'equity') equityTarget.value = value
   if (key === 'debt') debtTarget.value = value
   if (key === 'gold') goldTarget.value = value
-}
-
-const updateCashAmount = (value: string) => {
-  cashAmount.value = value
+  if (totalTargetPercent.value === 100) saveTargets()
 }
 </script>
 
@@ -133,12 +160,12 @@ const updateCashAmount = (value: string) => {
     :total-amount="totalAmount"
     :holdings="holdings"
     :donut-colors="['orange', 'blue', 'green', 'gray']"
-    :show-cash-input="true"
-    :cash-amount="cashAmount"
     :show-target-allocation="true"
     :targets="targets"
     :total-target-percent="totalTargetPercent"
-    @update:cashAmount="updateCashAmount"
+    :saving-targets="savingTargets"
+    :targets-saved="targetsSaved"
+    :targets-error="targetsError"
     @update:target="updateTarget"
   />
 </template>

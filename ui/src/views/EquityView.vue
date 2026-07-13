@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import { computed, onMounted, ref, watch } from 'vue'
+import { computed, onMounted, ref } from 'vue'
 import AllocationDashboard, { type HoldingItem } from '@/components/AllocationDashboard.vue'
 
-const cashAmount = ref('')
+type AssetTargets = { equity: number; debt: number; gold: number }
+
 const input = ref<Array<{ name: string; amount: number }>>([])
 const loading = ref(true)
 const error = ref('')
@@ -10,6 +11,11 @@ const error = ref('')
 const largeCapTarget = ref(50)
 const midCapTarget = ref(30)
 const smallCapTarget = ref(20)
+const assetTargets = ref<AssetTargets>({ equity: 70, debt: 20, gold: 10 })
+
+const savingTargets = ref(false)
+const targetsSaved = ref(false)
+const targetsError = ref('')
 
 const fetchPortfolio = async () => {
   try {
@@ -27,26 +33,62 @@ const fetchPortfolio = async () => {
   }
 }
 
+const fetchTargets = async () => {
+  try {
+    const response = await fetch('/api/target_allocations')
+    if (!response.ok) {
+      throw new Error(`HTTP error! status: ${response.status}`)
+    }
+    const data = (await response.json()) as {
+      asset: AssetTargets
+      equity: { large_cap: number; mid_cap: number; small_cap: number }
+    }
+    largeCapTarget.value = data.equity.large_cap
+    midCapTarget.value = data.equity.mid_cap
+    smallCapTarget.value = data.equity.small_cap
+    assetTargets.value = data.asset
+  } catch (e) {
+    targetsError.value = `Failed to load targets: ${e instanceof Error ? e.message : 'Unknown error'}`
+  }
+}
+
+const saveTargets = async () => {
+  try {
+    savingTargets.value = true
+    targetsSaved.value = false
+    targetsError.value = ''
+    const response = await fetch('/api/target_allocations/update', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        asset: assetTargets.value,
+        equity: {
+          large_cap: largeCapTarget.value,
+          mid_cap: midCapTarget.value,
+          small_cap: smallCapTarget.value,
+        },
+      }),
+    })
+    if (!response.ok) {
+      const text = await response.text()
+      throw new Error(text || `HTTP error! status: ${response.status}`)
+    }
+    targetsSaved.value = true
+  } catch (e) {
+    targetsError.value = `Failed to save targets: ${e instanceof Error ? e.message : 'Unknown error'}`
+  } finally {
+    savingTargets.value = false
+  }
+}
+
 onMounted(() => {
-  cashAmount.value = localStorage.getItem('equityCashAmount') ?? ''
-  largeCapTarget.value = Number(localStorage.getItem('largeCapTarget') ?? '50')
-  midCapTarget.value = Number(localStorage.getItem('midCapTarget') ?? '30')
-  smallCapTarget.value = Number(localStorage.getItem('smallCapTarget') ?? '20')
+  fetchTargets()
   fetchPortfolio()
 })
 
-watch(cashAmount, (value) => localStorage.setItem('equityCashAmount', value))
-watch(largeCapTarget, (value) => localStorage.setItem('largeCapTarget', value.toString()))
-watch(midCapTarget, (value) => localStorage.setItem('midCapTarget', value.toString()))
-watch(smallCapTarget, (value) => localStorage.setItem('smallCapTarget', value.toString()))
-
 const totalTargetPercent = computed(() => largeCapTarget.value + midCapTarget.value + smallCapTarget.value)
 
-const totalAmount = computed(() => {
-  const equityTotal = input.value.reduce((sum, item) => sum + item.amount, 0)
-  const cash = parseFloat(cashAmount.value) || 0
-  return equityTotal + cash
-})
+const totalAmount = computed(() => input.value.reduce((sum, item) => sum + item.amount, 0))
 
 const holdings = computed<HoldingItem[]>(() => {
   const result: HoldingItem[] = []
@@ -79,17 +121,6 @@ const holdings = computed<HoldingItem[]>(() => {
     }
   }
 
-  const cash = parseFloat(cashAmount.value) || 0
-  if (cash > 0) {
-    result.push({
-      name: 'cash',
-      label: 'Cash - 0%',
-      currentAmount: cash,
-      percent: (cash / totalAmount.value) * 100,
-      rebalanceAmount: -cash,
-    })
-  }
-
   return result
 })
 
@@ -100,13 +131,11 @@ const targets = computed(() => [
 ])
 
 const updateTarget = ({ key, value }: { key: string; value: number }) => {
+  targetsSaved.value = false
   if (key === 'large-cap') largeCapTarget.value = value
   if (key === 'mid-cap') midCapTarget.value = value
   if (key === 'small-cap') smallCapTarget.value = value
-}
-
-const updateCashAmount = (value: string) => {
-  cashAmount.value = value
+  if (totalTargetPercent.value === 100) saveTargets()
 }
 </script>
 
@@ -123,12 +152,12 @@ const updateCashAmount = (value: string) => {
     :total-amount="totalAmount"
     :holdings="holdings"
     :donut-colors="['orange', 'blue', 'green', 'gray']"
-    :show-cash-input="true"
-    :cash-amount="cashAmount"
     :show-target-allocation="true"
     :targets="targets"
     :total-target-percent="totalTargetPercent"
-    @update:cashAmount="updateCashAmount"
+    :saving-targets="savingTargets"
+    :targets-saved="targetsSaved"
+    :targets-error="targetsError"
     @update:target="updateTarget"
   />
 </template>
