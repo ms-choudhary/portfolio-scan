@@ -283,6 +283,38 @@ func (f *MutualFund) removeRedeemedLots(units float64) {
 	f.Lots = f.Lots[i:]
 }
 
+type MutualFundMeta struct {
+	Symbol      string   `json:"symbol"`
+	Name        string   `json:"name"`
+	Category    Category `json:"category"`
+	SubCategory Category `json:"sub_category"`
+}
+
+func GetMutualFundMetadata() ([]MutualFundMeta, error) {
+	var funds struct {
+		MutualFunds []MutualFund `json:"mutual_funds"`
+	}
+
+	data, err := os.ReadFile("mutual_funds.json")
+	if err != nil {
+		return []MutualFundMeta{}, err
+	}
+	if err := json.Unmarshal(data, &funds); err != nil {
+		return []MutualFundMeta{}, err
+	}
+
+	result := make([]MutualFundMeta, 0, len(funds.MutualFunds))
+	for _, f := range funds.MutualFunds {
+		result = append(result, MutualFundMeta{
+			Symbol:      f.Symbol,
+			Name:        f.Name,
+			Category:    f.Category,
+			SubCategory: f.SubCategory,
+		})
+	}
+	return result, nil
+}
+
 func GetMutualFunds() ([]MutualFund, error) {
 	transactions, err := getAllTransactions()
 	if err != nil {

@@ -194,6 +194,24 @@ func handleUpdateRecurringFund(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(updated.ToResponse())
 }
 
+func handleMutualFundMetadata(w http.ResponseWriter, req *http.Request) {
+	meta, err := funds.GetMutualFundMetadata()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	data, err := json.Marshal(meta)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
+	log.Printf("200 ok: get mutual fund metadata")
+}
+
 func handleTargetAllocations(w http.ResponseWriter, req *http.Request) {
 	targets, err := funds.GetTargetAllocations()
 	if err != nil {
@@ -276,6 +294,7 @@ func main() {
 	http.HandleFunc("/api/portfolio", handlePortfolio)
 	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
 	http.HandleFunc("/api/mutual_funds", handleMutualFunds)
+	http.HandleFunc("/api/mutual_funds/metadata", handleMutualFundMetadata)
 	http.HandleFunc("/api/recurring_funds", handleRecurringFunds)
 	http.HandleFunc("/api/recurring_funds/update", handleUpdateRecurringFund)
 	http.HandleFunc("/api/target_allocations", handleTargetAllocations)

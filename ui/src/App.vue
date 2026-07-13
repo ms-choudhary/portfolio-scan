@@ -5,6 +5,7 @@ import EquityView from '@/views/EquityView.vue'
 import MutualFundsView from '@/views/MutualFundsView.vue'
 import RecurringFundsView from '@/views/RecurringFundsView.vue'
 import SmartRedemptionView from '@/views/SmartRedemptionView.vue'
+import InvestView from '@/views/InvestView.vue'
 
 const path = ref(window.location.pathname)
 
@@ -35,6 +36,10 @@ const currentView = computed(() => {
 
   if (path.value === '/smart-redemption') {
     return SmartRedemptionView
+  }
+
+  if (path.value === '/invest') {
+    return InvestView
   }
 
   return HomeView
