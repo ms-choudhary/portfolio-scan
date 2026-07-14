@@ -21,3 +21,5 @@ nav.json
 smart-redemption/*.json
 
 target_allocations.json
+
+cmd/allocation-alert/allocation-alert
