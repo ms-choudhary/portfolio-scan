@@ -53,6 +53,7 @@ const cashInput = ref('')
 const rebalance = ref(true)
 const pfChecked = ref(false)
 const npsChecked = ref(false)
+const equityOnly = ref(false)
 
 const targets = ref<TargetAllocations>({
   asset: { equity: 70, debt: 20, gold: 10 },
@@ -184,12 +185,15 @@ const assetBuckets = computed<Bucket[]>(() => [
   { key: 'gold', current: sumByName(assetHoldings.value, 'gold'), target: targets.value.asset.gold, locked: 0 },
 ])
 
-const assetAdded = computed(() =>
-  allocateWorstGapFirst(
+const assetAdded = computed<Record<string, number>>(() => {
+  if (equityOnly.value) {
+    return { equity: npsAmount.value + deployable.value, debt: pfAmount.value, gold: 0 }
+  }
+  return allocateWorstGapFirst(
     rebalance.value ? assetBuckets.value : withoutCurrent(assetBuckets.value),
     deployable.value,
-  ),
-)
+  )
+})
 
 const equityMf = computed(() => at(assetAdded.value, 'equity') - npsAmount.value)
 const debtMf = computed(() => at(assetAdded.value, 'debt') - pfAmount.value)
@@ -350,6 +354,10 @@ const addFirstSuggestion = () => {
       <label class="flex items-center gap-2">
         <input v-model="npsChecked" type="checkbox" :disabled="!nps" />
         <span>NPS</span>
+      </label>
+      <label class="flex items-center gap-2">
+        <input v-model="equityOnly" type="checkbox" />
+        <span>Equity only</span>
       </label>
     </div>
 
