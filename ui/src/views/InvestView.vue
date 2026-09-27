@@ -15,6 +15,7 @@ type FundMeta = {
   name: string
   category: string
   sub_category: string
+  active: boolean
 }
 
 type RecurringFund = {
@@ -95,7 +96,7 @@ const loadAll = async () => {
     assetHoldings.value = a
     equityHoldings.value = e
     recurringFunds.value = r
-    fundMeta.value = m
+    fundMeta.value = m.filter((f) => f.active)
   } catch (e) {
     error.value = `Failed to load: ${e instanceof Error ? e.message : 'Unknown error'}`
   } finally {

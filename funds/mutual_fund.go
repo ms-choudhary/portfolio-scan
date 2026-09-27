@@ -30,6 +30,7 @@ type MutualFund struct {
 	Name            string   `json:"name"`
 	ExitLoadPercent float64  `json:"exit_load_percent,omitempty"`
 	ExitLoadDays    int      `json:"exit_load_days,omitempty"`
+	Active          bool     `json:"active"`
 	LTP             float64  `json:"-"` // Last Traded Price
 	Lots            []Lot    `json:"-"`
 }
@@ -288,6 +289,7 @@ type MutualFundMeta struct {
 	Name        string   `json:"name"`
 	Category    Category `json:"category"`
 	SubCategory Category `json:"sub_category"`
+	Active      bool     `json:"active"`
 }
 
 func GetMutualFundMetadata() ([]MutualFundMeta, error) {
@@ -310,6 +312,7 @@ func GetMutualFundMetadata() ([]MutualFundMeta, error) {
 			Name:        f.Name,
 			Category:    f.Category,
 			SubCategory: f.SubCategory,
+			Active:      f.Active,
 		})
 	}
 	return result, nil
