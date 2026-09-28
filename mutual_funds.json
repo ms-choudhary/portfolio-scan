@@ -7,7 +7,8 @@
       "name": "MIRAE ASSET ELSS TAX SAVER FUND - DIRECT PLAN",
       "symbol": "INF769K01DM9",
       "exit_load_percent": 0,
-      "exit_load_days": 0
+      "exit_load_days": 0,
+      "active": false
     },
     {
       "account": "AXXXXXXX8F",
@@ -16,7 +17,8 @@
       "name": "TATA SMALL CAP FUND - DIRECT PLAN",
       "symbol": "INF277K011O1",
       "exit_load_percent": 0.50,
-      "exit_load_days": 30
+      "exit_load_days": 30,
+      "active": true
     },
     {
       "account": "AXXXXXXX8F",
@@ -25,7 +27,8 @@
       "name": "UTI NIFTY 50 INDEX FUND - DIRECT PLAN",
       "symbol": "INF789F01XA0",
       "exit_load_percent": 0,
-      "exit_load_days": 0
+      "exit_load_days": 0,
+      "active": true
     },
     {
       "account": "AXXXXXXX8F",
@@ -34,7 +37,8 @@
       "name": "EDELWEISS MID CAP FUND - DIRECT PLAN",
       "symbol": "INF843K01AO4",
       "exit_load_percent": 1,
-      "exit_load_days": 90
+      "exit_load_days": 90,
+      "active": true
     },
     {
       "account": "AXXXXXXX8F",
@@ -43,7 +47,8 @@
       "name": "HDFC SMALL CAP FUND - DIRECT PLAN",
       "symbol": "INF179KA1RW5",
       "exit_load_percent": 1,
-      "exit_load_days": 365
+      "exit_load_days": 365,
+      "active": false
     },
     {
       "account": "AXXXXXXX8F",
@@ -52,7 +57,8 @@
       "name": "DSP ELSS TAX SAVER FUND - DIRECT PLAN",
       "symbol": "INF740K01OK1",
       "exit_load_percent": 0,
-      "exit_load_days": 0
+      "exit_load_days": 0,
+      "active": false
     },
     {
       "account": "AXXXXXXX8F",
@@ -61,7 +67,8 @@
       "name": "NIPPON INDIA SMALL CAP FUND - DIRECT PLAN",
       "symbol": "INF204K01K15",
       "exit_load_percent": 1,
-      "exit_load_days": 365
+      "exit_load_days": 365,
+      "active": true
     },
     {
       "account": "AXXXXXXX8F",
@@ -70,7 +77,8 @@
       "name": "KOTAK MIDCAP FUND - DIRECT PLAN",
       "symbol": "INF174K01LT0",
       "exit_load_percent": 1,
-      "exit_load_days": 365
+      "exit_load_days": 365,
+      "active": false
     },
     {
       "account": "AXXXXXXX8F",
@@ -79,7 +87,8 @@
       "name": "KOTAK LARGE u0026 MIDCAP FUND - DIRECT PLAN",
       "symbol": "INF174K01LF9",
       "exit_load_percent": 1,
-      "exit_load_days": 365
+      "exit_load_days": 365,
+      "active": false
     },
     {
       "account": "AXXXXXXX8F",
@@ -88,21 +97,24 @@
       "name": "MOTILAL OSWAL MIDCAP FUND - DIRECT PLAN",
       "symbol": "INF247L01445",
       "exit_load_percent": 1,
-      "exit_load_days": 365
+      "exit_load_days": 365,
+      "active": true
     },
     {
       "account": "BOXXXXXX2N",
       "category": "gold",
       "sub_category": "etf",
       "name": "UTI GOLD ETF FUND OF FUND - DIRECT PLAN",
-      "symbol": "INF789F1AWB9"
+      "symbol": "INF789F1AWB9",
+      "active": true
     },
     {
       "account": "BOXXXXXX2N",
       "category": "debt",
       "sub_category": "liquid",
       "name": "AXIS LIQUID FUND - DIRECT PLAN",
-      "symbol": "INF846K01CX4"
+      "symbol": "INF846K01CX4",
+      "active": true
     }
   ]
 }

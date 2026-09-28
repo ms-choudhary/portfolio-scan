@@ -3,7 +3,6 @@ import { computed } from 'vue'
 import { DonutChart } from '@/components/ui/chart-donut'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
-import { Textarea } from '@/components/ui/textarea'
 import {
   Table,
   TableBody,
@@ -33,15 +32,15 @@ const props = defineProps<{
   totalAmount: number
   donutColors: string[]
   holdings: HoldingItem[]
-  showCashInput?: boolean
-  cashAmount?: string
   showTargetAllocation?: boolean
   targets?: Array<{ key: string; label: string; value: number }>
   totalTargetPercent?: number
+  savingTargets?: boolean
+  targetsSaved?: boolean
+  targetsError?: string
 }>()
 
 const emit = defineEmits<{
-  'update:cashAmount': [value: string]
   'update:target': [payload: { key: string; value: number }]
 }>()
 
@@ -62,16 +61,6 @@ const formatCurrency = (amount: number) => Math.round(amount).toLocaleString('en
       :colors="donutColors"
       :valueFormatter="(tick) => `${tick.toFixed(1)}%`"
       :data="chartData"
-    />
-  </div>
-
-  <div v-if="showCashInput" class="block ml-auto mr-auto mb-8 mt-8 max-w-md">
-    <h2 class="text-xl font-semibold text-center mb-4">Cash Amount</h2>
-    <Textarea
-      :model-value="cashAmount"
-      placeholder="Enter cash amount"
-      type="number"
-      @update:model-value="(value) => emit('update:cashAmount', String(value ?? ''))"
     />
   </div>
 
@@ -98,6 +87,12 @@ const formatCurrency = (amount: number) => Math.round(amount).toLocaleString('en
       Total: {{ totalTargetPercent }}%
       <span v-if="totalTargetPercent !== 100">(should equal 100%)</span>
       <span v-else>✓</span>
+    </div>
+
+    <div v-if="savingTargets || targetsError || targetsSaved" class="mt-3 text-center text-sm">
+      <span v-if="savingTargets" class="text-muted-foreground">Saving...</span>
+      <span v-else-if="targetsError" class="text-red-600">{{ targetsError }}</span>
+      <span v-else class="text-green-600">Saved</span>
     </div>
   </div>
 

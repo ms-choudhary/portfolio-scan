@@ -165,6 +165,95 @@ func handleRecurringFunds(w http.ResponseWriter, req *http.Request) {
 	log.Printf("200 ok: get recurring funds")
 }
 
+func handleUpdateRecurringFund(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req funds.RecurringFundUpdate
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	if req.Symbol == "" {
+		http.Error(w, "symbol is required", http.StatusBadRequest)
+		return
+	}
+
+	updated, err := funds.UpdateRecurringFund(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(updated.ToResponse())
+}
+
+func handleMutualFundMetadata(w http.ResponseWriter, req *http.Request) {
+	meta, err := funds.GetMutualFundMetadata()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	data, err := json.Marshal(meta)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
+	log.Printf("200 ok: get mutual fund metadata")
+}
+
+func handleTargetAllocations(w http.ResponseWriter, req *http.Request) {
+	targets, err := funds.GetTargetAllocations()
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	data, err := json.Marshal(targets)
+	if err != nil {
+		handleHTTPError(w, err)
+		return
+	}
+
+	w.Header().Set("Access-Control-Allow-Origin", "*")
+	fmt.Fprint(w, string(data))
+	log.Printf("200 ok: get target allocations")
+}
+
+func handleUpdateTargetAllocations(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var req funds.TargetAllocations
+	if err := json.NewDecoder(r.Body).Decode(&req); err != nil {
+		http.Error(w, "invalid request body", http.StatusBadRequest)
+		return
+	}
+	defer r.Body.Close()
+
+	saved, err := funds.SaveTargetAllocations(req)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusBadRequest)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+	json.NewEncoder(w).Encode(saved)
+}
+
 func handleRedemption(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "method not allowed", http.StatusMethodNotAllowed)
@@ -205,7 +294,11 @@ func main() {
 	http.HandleFunc("/api/portfolio", handlePortfolio)
 	http.HandleFunc("/api/portfolio/equity/categories", handleEquityCategories)
 	http.HandleFunc("/api/mutual_funds", handleMutualFunds)
+	http.HandleFunc("/api/mutual_funds/metadata", handleMutualFundMetadata)
 	http.HandleFunc("/api/recurring_funds", handleRecurringFunds)
+	http.HandleFunc("/api/recurring_funds/update", handleUpdateRecurringFund)
+	http.HandleFunc("/api/target_allocations", handleTargetAllocations)
+	http.HandleFunc("/api/target_allocations/update", handleUpdateTargetAllocations)
 	http.HandleFunc("/api/smart_redemption", handleRedemption)
 
 	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {

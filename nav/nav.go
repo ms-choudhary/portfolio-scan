@@ -49,8 +49,8 @@ func store(nav *NAV) error {
 func parseNAV(lines []string, sym string) (float64, error) {
 	for _, line := range lines {
 		if strings.Contains(line, sym) {
-			// nav is 5 field, semi-colon separated
-			nav, err := strconv.ParseFloat(strings.Split(line, ";")[4], 64)
+			// nav is 7 field, semi-colon separated
+			nav, err := strconv.ParseFloat(strings.Split(line, ";")[6], 64)
 			if err != nil {
 				return 0, fmt.Errorf("could not parse float: %v", err)
 			}

@@ -30,6 +30,7 @@ type MutualFund struct {
 	Name            string   `json:"name"`
 	ExitLoadPercent float64  `json:"exit_load_percent,omitempty"`
 	ExitLoadDays    int      `json:"exit_load_days,omitempty"`
+	Active          bool     `json:"active"`
 	LTP             float64  `json:"-"` // Last Traded Price
 	Lots            []Lot    `json:"-"`
 }
@@ -281,6 +282,40 @@ func (f *MutualFund) removeRedeemedLots(units float64) {
 		remaining -= f.Lots[i].Qty
 	}
 	f.Lots = f.Lots[i:]
+}
+
+type MutualFundMeta struct {
+	Symbol      string   `json:"symbol"`
+	Name        string   `json:"name"`
+	Category    Category `json:"category"`
+	SubCategory Category `json:"sub_category"`
+	Active      bool     `json:"active"`
+}
+
+func GetMutualFundMetadata() ([]MutualFundMeta, error) {
+	var funds struct {
+		MutualFunds []MutualFund `json:"mutual_funds"`
+	}
+
+	data, err := os.ReadFile("mutual_funds.json")
+	if err != nil {
+		return []MutualFundMeta{}, err
+	}
+	if err := json.Unmarshal(data, &funds); err != nil {
+		return []MutualFundMeta{}, err
+	}
+
+	result := make([]MutualFundMeta, 0, len(funds.MutualFunds))
+	for _, f := range funds.MutualFunds {
+		result = append(result, MutualFundMeta{
+			Symbol:      f.Symbol,
+			Name:        f.Name,
+			Category:    f.Category,
+			SubCategory: f.SubCategory,
+			Active:      f.Active,
+		})
+	}
+	return result, nil
 }
 
 func GetMutualFunds() ([]MutualFund, error) {
